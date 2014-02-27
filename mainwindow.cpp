@@ -162,8 +162,24 @@ void MainWindow::LineEdit_guardar_enter()
             QMessageBox::critical(this,"Error","Campos Vacios");
 
         }else{
-            QString registro = "00                                                                                  "; // fin
-            registro.replace (2,strlen(((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-2))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-2))->text());
+            QString s=((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-2))->text();
+            QString registro;
+            if(s.length()==1){
+                registro = "000                                                                                 "; // fin
+                registro.replace (3,strlen(((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-2))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-2))->text());
+            }
+            if(s.length()==2){
+                registro = "00                                                                                  "; // fin
+                registro.replace (2,strlen(((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-2))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-2))->text());
+            }
+            if(s.length()==3){
+                registro = "0                                                                                   "; // fin
+                registro.replace (1,strlen(((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-2))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-2))->text());
+            }
+            if(s.length()==4){
+                registro = "                                                                                    "; // fin
+                registro.replace (0,strlen(((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-2))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-2))->text());
+            }
             registro.replace(4,strlen(((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-1))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-1))->text());
             registro.replace(43,strlen(((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()))->text());
             cliente.writerecord(registro.toStdString().c_str(),(((QLineEdit*)ui->tableWidget->cellWidget(index.row(),1))->text().toInt()));
