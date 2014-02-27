@@ -215,7 +215,6 @@ void MainWindow::LineEdit_guardar_enter()
         }
     }
 }
-//update
 
 void MainWindow::crear_nuevaFila()
 {
