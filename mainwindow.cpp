@@ -219,7 +219,7 @@ void MainWindow::LineEdit_guardar_enter()
 
 void MainWindow::crear_nuevaFila()
 {
-    const int ultima_fila =  ui->tableWidget->rowCount();
+    const int ultima_fila =  ui->tableWidget->rowCount();//estoy en mi rama
     int fila = ui->tableWidget->rowCount();
 
     ui->tableWidget->insertRow(ultima_fila);
