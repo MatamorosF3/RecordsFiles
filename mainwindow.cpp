@@ -184,7 +184,6 @@ void MainWindow::LineEdit_guardar_enter()
             registro.replace(43,strlen(((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()))->text());
             cliente.writerecord(registro.toStdString().c_str(),(((QLineEdit*)ui->tableWidget->cellWidget(index.row(),1))->text().toInt()));
             crear_nuevaFila();
-            //listo
         }
     }else{
         if(((QLineEdit*)listaNombre.at(index.row()))->text().isEmpty() || ((QLineEdit*)listaCorreo.at(index.row()))->text().isEmpty()){
