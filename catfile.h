@@ -1,10 +1,11 @@
-#ifndef LINEARINDEXFILE_H
-#define LINEARINDEXFILE_H
-#include "tdaindexfile.h"
-class LinearIndexFile //: public TDAIndexFile
-{
+#ifndef CATFILE
+#define CATFILE
+#include "tdafsrecordfile.h"
+#include <QString>
+#include <list>
+class Catfile : public TDAFSRecordFile{
 public:
-    LinearIndexFile();
+    Catfile();
     int readrecord(char*,int);
     int writerecord(const char*,int ind);
     int findrecord(int);
@@ -15,5 +16,11 @@ public:
     int eraserecord(int);
     int updaterecord(const char*, int offset);
     int recordsSize();
+    int updateAvailCat();
+
+    QString path;
+    list <int> AvailCat;
+
 };
-#endif // LINEARINDEXFILE_H
+
+#endif // CATFILE

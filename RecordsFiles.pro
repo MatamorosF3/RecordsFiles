@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     TDARecordFile.cpp \
     productfile.cpp \
     tdaindexfile.cpp \
-    linearindexfile.cpp
+    linearindexfile.cpp \
+    catfile.cpp
 
 HEADERS  += mainwindow.h \
     clientfile.h \
@@ -29,6 +30,7 @@ HEADERS  += mainwindow.h \
     TDARecordFile.h \
     productfile.h \
     tdaindexfile.h \
-    linearindexfile.h
+    linearindexfile.h \
+    catfile.h
 
 FORMS    += mainwindow.ui

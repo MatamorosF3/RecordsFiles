@@ -4,6 +4,7 @@
 #include <sstream>
 #include <iostream>
 #include <QDebug>
+#include <stdio.h>
 
 ProductFile::ProductFile()
 {
@@ -132,6 +133,7 @@ int ProductFile::updaterecord(const char* rec, int ind){
 
     this->write(rec,37);
     this->close();
+
     return 0;
 }
 
@@ -146,19 +148,25 @@ int ProductFile::recordsSize()
 }
 
 int ProductFile::updateAvail()
-{
-    this->open("AvailProductos.txt",ios_base::out);
+{    
+    if(!avail.empty()){
 
-    for (std::list<int>::iterator it=avail.begin() ; it != avail.end(); ++it){
-        char ft[ (strlen(QString::number(*it).toStdString().c_str())) +2];
-        ft[sizeof(ft) -1] = '\0';
-        strcpy(ft,QString::number(*it).toStdString().c_str());
-        ft[sizeof(ft) - 2] = '\n';
-        this->write(ft,(sizeof(ft)) - 1);
+        this->open("AvailProductos.txt",ios_base::out);
+
+        for (std::list<int>::iterator it=avail.begin() ; it != avail.end(); ++it){
+            char ft[ (strlen(QString::number(*it).toStdString().c_str())) +2];
+            ft[sizeof(ft) -1] = '\0';
+            strcpy(ft,QString::number(*it).toStdString().c_str());
+            ft[sizeof(ft) - 2] = '\n';
+            this->write(ft,(sizeof(ft)) - 1);
+        }
+
+        this->close();
+    }else{
+        remove("AvailProductos.txt");
+        this->open("AvailProductos.txt",ios_base::out);
+        this->close();
     }
-
-    this->close();
-
 }
 
 
