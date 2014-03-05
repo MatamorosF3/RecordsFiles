@@ -21,7 +21,7 @@
        <string notr="true"/>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="Clientes">
        <attribute name="title">
@@ -61,6 +61,11 @@
        <layout class="QGridLayout" name="gridLayout">
         <item row="0" column="0">
          <widget class="QTableWidget" name="tableWidget_categorias">
+          <column>
+           <property name="text">
+            <string>Eliminar</string>
+           </property>
+          </column>
           <column>
            <property name="text">
             <string>Id</string>

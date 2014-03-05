@@ -128,7 +128,7 @@ int ClientFile::updaterecord(const char* rec, int ind){
         this->seek(0);
     }
     if(ind != 1){
-
+        ind--;
         this->seek(ind*84);
     }
 

@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "clientfile.h"
 #include "productfile.h"
+#include "catfile.h"
 #include <QPointer>
 #include <QLineEdit>
 #include <QCheckBox>
@@ -23,6 +24,9 @@ class MainWindow : public QMainWindow
     QList<QPointer<QLineEdit> > listaNombreProd;
     QList<QPointer<QLineEdit> > listaIdCategoriaProd;
     QList<QPointer<QLineEdit> > listaPrecio;
+    QList<QPointer<QLineEdit> > listaIdCate;
+    QList<QPointer<QLineEdit> > listaNombreCate;
+    QList<QPointer<QCheckBox> > listaEliminarCate;
 
 public:
     explicit MainWindow(QWidget *parent = 0);
@@ -38,11 +42,12 @@ private slots:
     void on_pushButton_guardar_clicked();
 
     void LineEdit_guardar_enter();
+    void LineEdit_guardar_enter_Categorias();
     void LineEdit_guardar_enter_Productos();
 
     void crear_nuevaFila();
     void crear_nuevaFila_Productos();
-
+    void crear_nuevaFila_Categorias();
     void crear_nuevaFila(QString,QString,QString);
 
 
@@ -56,6 +61,8 @@ private:
     ClientFile availCliente;
     ProductFile producto;
     ProductFile availProducto;
+    Catfile categoria;
+    Catfile availCategoria;
     bool leer;
 
 };

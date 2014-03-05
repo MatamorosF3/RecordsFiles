@@ -6,23 +6,16 @@ class TDAIndexFile : public TDARecordFile
 {
 public:
     TDAIndexFile();
-    struct indice{
-        char llave[5],offset[7];
-    };
-
-    int readrecord(char*,int);
-    int writerecord(const char*,int ind);
-    int findrecord(int);
-    int findrecord(const char*,int);
-    void seek(int);
-    void seek(ios::seekdir mode=ios::beg);
-    int tell();
-    int eraserecord(int);
-    int updaterecord(const char*, int offset);
-    int recordsSize();
-    vector<indice> ClientIndex;
-    vector<indice> ProductIndex;
-    vector<indice> CategIndex;
+    virtual int readrecord(char*,int)=0;
+    virtual int writerecord(const char*,int ind)=0;
+    virtual int findrecord(int)=0;
+    virtual int findrecord(const char*,int)=0;
+    virtual void seek(int)=0;
+    virtual void seek(ios::seekdir mode=ios::beg)=0;
+    virtual int tell()=0;
+    virtual int eraserecord(int)=0;
+    virtual int updaterecord(const char*, int offset)=0;
+    virtual int recordsSize()=0;
 };
 
 #endif // TDAINDEXFILE_H

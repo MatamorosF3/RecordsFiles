@@ -1,11 +1,11 @@
 #ifndef LINEARINDEXFILE_H
 #define LINEARINDEXFILE_H
 #include "tdaindexfile.h"
-class LinearIndexFile //: public TDAIndexFile
+class LinearIndexFile : public TDAIndexFile
 {
 public:
     LinearIndexFile();
-    int readrecord(char*,int);
+    /*int readrecord(char*, int, QString);
     int writerecord(const char*,int ind);
     int findrecord(int);
     int findrecord(const char*,int);
@@ -14,6 +14,6 @@ public:
     int tell();
     int eraserecord(int);
     int updaterecord(const char*, int offset);
-    int recordsSize();
+    int recordsSize();*/
 };
 #endif // LINEARINDEXFILE_H

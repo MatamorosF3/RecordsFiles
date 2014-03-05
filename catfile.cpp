@@ -35,8 +35,6 @@ int Catfile::readrecord( char* rec, int offset){
         }
         this->close();
     }
-
-
     return 0;
 }
 //OJO
@@ -60,9 +58,9 @@ int Catfile::findrecord(int id){
     f.open("Categories.txt",ios::in);
     int i=0,idd=-1;
     while(!f.isEOF()){
-        f.seek(84*i);
-        char [84] buffer;
-        f.read(buffer,84);
+        f.seek(24*i);
+        char [24] buffer;
+        f.read(buffer,24);
         buffer[83]='\0';
         string identidad="";
         stringstream ss;
@@ -110,8 +108,8 @@ int Catfile::eraserecord(int ind){
     }
     if(ind != 1){
         ind--;
-        this->seek(ind*84);
-        //this->seek(ind*84);
+        this->seek(ind*24);
+        //this->seek(ind*24);
     }
 
     if(!AvailCat.empty())
@@ -128,11 +126,11 @@ int Catfile::updaterecord(const char* rec, int ind){
         this->seek(0);
     }
     if(ind != 1){
-
-        this->seek(ind*84);
+        ind--;
+        this->seek(ind*24);
     }
 
-    this->write(rec,84);
+    this->write(rec,24);
     this->close();
     return 0;
 }

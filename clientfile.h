@@ -1,6 +1,7 @@
 #ifndef CLIENTFILE_H
 #define CLIENTFILE_H
 #include "tdafsrecordfile.h"
+#include "linearindexfile.h"
 #include <QString>
 #include <list>
 class ClientFile : public TDAFSRecordFile{
@@ -17,10 +18,9 @@ public:
     int updaterecord(const char*, int offset);
     int recordsSize();
     int updateAvail();
-
     QString path;
     list <int> avail;
-
+    //LinearIndexFile idx;
 };
 
 #endif // CLIENTFILE_H

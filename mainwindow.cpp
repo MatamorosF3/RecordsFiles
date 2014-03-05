@@ -28,6 +28,7 @@ void MainWindow::on_pushButton_leer_clicked()
 {
     cliente.path = "Clientes.txt";
     producto.path= "Productos.txt";
+    categoria.path= "Categories.txt";
     if(ui->tabWidget->currentIndex() == 0){ // inicio if clientes
         const int si  =cliente.recordsSize();
         int cont = 0;
@@ -98,7 +99,55 @@ void MainWindow::on_pushButton_leer_clicked()
         } //fin while
 
     } // fin if clientes
+    if(ui->tabWidget->currentIndex() == 1){ // inicio if Categorias
+        const int si  =categoria.recordsSize();
+        int cont = 0;
+        char buffer [24];
+        while(cont < si ){
 
+            categoria.readrecord(buffer,cont);
+            //qDebug() <<buffer;
+            buffer[23] = '\0';
+            cont += 23;
+            QString sId;//length de 4
+            QString sNombre;//length de 20
+            for(int i = 0; i < 4; i++){
+                sId += buffer[i];
+            }
+            for(int i = 4; i < 24;i++){
+                if(i != 23){
+                    if(buffer[i] == ' ' && buffer[i+1] == ' ')
+                        break;
+                    else{
+                        sNombre += buffer[i];
+                    }
+                }
+            }
+            const int ultima_fila =  ui->tableWidget_categorias->rowCount();
+            if(sId[0] == '*')
+                continue;
+            ui->tableWidget_categorias->insertRow(ultima_fila);
+            QPointer<QCheckBox> eliminar = new QCheckBox(this);
+            QPointer<QLineEdit>  id = new QLineEdit(this);
+            QPointer<QLineEdit>  nombre = new QLineEdit(this);
+            connect(nombre,SIGNAL(returnPressed()),this,SLOT(LineEdit_guardar_enter_Categorias()));
+            QRegExp validarNumeros("^[0-9]*$");
+            id->setText(sId);
+            id->setMaxLength(4);
+            id->setValidator(new QRegExpValidator(validarNumeros, this));
+            id->setEnabled(false);
+            nombre->setMaxLength(19);
+            nombre->setText(sNombre);
+            ui->tableWidget_categorias->setCellWidget(ultima_fila,0,eliminar);
+            ui->tableWidget_categorias->setCellWidget(ultima_fila,1,id);
+            ui->tableWidget_categorias->setCellWidget(ultima_fila,2,nombre);
+
+            listaEliminarCate.append(eliminar);
+            listaIdCate.append(id);
+            listaNombreCate.append(nombre);
+        } //fin while
+
+    } // fin if categorias
     if(ui->tabWidget->currentIndex() == 2){ // inicio if productos
         const int si  =producto.recordsSize();
         int cont = 0;
@@ -116,7 +165,7 @@ void MainWindow::on_pushButton_leer_clicked()
             for(int i = 0; i < 4; i++){
                 sId += buffer[i];
             }
-            for(int i = 4; i < 25;i++){
+            for(int i = 4; i < 24;i++){
                 if(i != 23){
                     if(buffer[i] == ' ' && buffer[i+1] == ' ')
                         break;
@@ -126,16 +175,16 @@ void MainWindow::on_pushButton_leer_clicked()
                 }
             }
             for(int i = 24; i < 29; i++){
-                if(i != 27){
+                if(i != 28){
                     if(buffer[i] == ' ' && buffer[i+1] == ' ')
                         break;
                     else{
-                        sCategoria += buffer[i];
+                        sCategoria += buffer[i];\
                     }
                 }
             }
-            for(int i = 28; i < 37; i++){
-                if(i != 36){
+            for(int i = 28; i < 38; i++){
+                if(i != 37){
                     if(buffer[i] == ' ' && buffer[i+1] == ' ')
                         break;
                     else{
@@ -154,7 +203,6 @@ void MainWindow::on_pushButton_leer_clicked()
             QPointer<QLineEdit>  nombre = new QLineEdit(this);
             QPointer<QLineEdit>  IdCategoria = new QLineEdit(this);
             QPointer<QLineEdit>  precio = new QLineEdit(this);
-            //int ddd=2;
             connect(precio,SIGNAL(returnPressed()),this,SLOT(LineEdit_guardar_enter_Productos()));
                     QRegExp validarNumeros("^[0-9]*$");
 
@@ -171,7 +219,6 @@ void MainWindow::on_pushButton_leer_clicked()
 
             precio->setMaxLength(7);
             precio->setText(sPrecio);
-
             ui->tableWidget_productos->setCellWidget(ultima_fila,0,eliminar);
             ui->tableWidget_productos->setCellWidget(ultima_fila,1,id);
             ui->tableWidget_productos->setCellWidget(ultima_fila,2,nombre);
@@ -186,6 +233,8 @@ void MainWindow::on_pushButton_leer_clicked()
         } //fin while
 
     } // fin if productos
+
+
     leer = true;
     crear_nuevaFila_Productos();
 }
@@ -223,15 +272,31 @@ void MainWindow::on_pushButton_eliminar_clicked()
         cliente.avail.sort();
         ((QLineEdit*)listaId.at(listaId.length()-1))->setText(QString::number(cliente.avail.front()));
     } // fin if clientes
+    if(ui->tabWidget->currentIndex() == 1){ // if productos
+        for (int i = 0;i < ui->tableWidget_categorias->rowCount(); i++){
+            if(listaEliminarCate.at(i)->isChecked()){
+                categoria.eraserecord(atoi(((QLineEdit*)listaIdCate.at(i))->text().toStdString().c_str()));
+                ui->tableWidget_categorias->removeRow(i);
+
+                // eliminamos memoria dinamica
+                delete listaEliminarCate.at(i);
+                delete listaIdCate.at(i);
+                delete listaNombreCate.at(i);
+
+                // quitamos el puntero de la lista
+                listaEliminarCate.removeAt(i);
+                listaIdCate.removeAt(i);
+                listaNombreCate.removeAt(i);
+                i = -1;
+            }
+        }
+        categoria.AvailCat.sort();
+        ((QLineEdit*)listaIdCate.at(listaIdCate.length()-1))->setText(QString::number(categoria.AvailCat.front()));
+    } // fin if Categorias
     if(ui->tabWidget->currentIndex() == 2){ // if productos
-        qDebug()<<"UI->tableWidget_productos->rowCount(): "<<ui->tableWidget_productos->rowCount();
-        //int a;
         for (int i = 0;i < ui->tableWidget_productos->rowCount(); i++){
             if(listaEliminarProd.at(i)->isChecked()){
-                qDebug()<< "listaEliminarProd.at(i): "<<listaIdProd.size();
-                qDebug()<< "Antes de erase, i: "<<i;
                 producto.eraserecord(atoi(((QLineEdit*)listaIdProd.at(i))->text().toStdString().c_str()));
-                qDebug()<< "Despues de erase, i: "<<i;
                 ui->tableWidget_productos->removeRow(i);
 
                 // eliminamos memoria dinamica
@@ -322,6 +387,56 @@ void MainWindow::LineEdit_guardar_enter()
         }
 }
 
+void MainWindow::LineEdit_guardar_enter_Categorias()
+{
+
+    int rows = ui->tableWidget_categorias->rowCount();
+    QWidget *widget = QApplication::focusWidget();
+    QModelIndex index = ui->tableWidget_categorias->indexAt(widget->pos());
+
+    if(index.row() == rows-1){
+
+        if(((QLineEdit*)listaNombreCate.at(index.row()))->text().isEmpty() || ((QLineEdit*)listaIdCate.at(index.row()))->text().isEmpty()){
+
+            QMessageBox::critical(this,"Error","Campos Vacios");
+
+        }else{
+            QString s=((QLineEdit*)ui->tableWidget_categorias->cellWidget(index.row(),index.column()-1))->text();
+            QString registro="";
+
+            if(s.length()==1){
+                registro = "000                                "; // fin
+                registro.replace (3,strlen(((QLineEdit*)ui->tableWidget_categorias->cellWidget(index.row(),index.column()-1))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_categorias->cellWidget(index.row(),index.column()-1))->text());
+            }
+            if(s.length()==2){
+                registro = "00                                 "; // fin
+                registro.replace (2,strlen(((QLineEdit*)ui->tableWidget_categorias->cellWidget(index.row(),index.column()-1))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_categorias->cellWidget(index.row(),index.column()-1))->text());
+            }
+            if(s.length()==3){
+                registro = "0                                  "; // fin
+                registro.replace (1,strlen(((QLineEdit*)ui->tableWidget_categorias->cellWidget(index.row(),index.column()-1))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_categorias->cellWidget(index.row(),index.column()-1))->text());
+            }
+            if(s.length()==4){
+                registro = "                                   "; // fin
+                registro.replace (0,strlen(((QLineEdit*)ui->tableWidget_categorias->cellWidget(index.row(),index.column()-1))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_categorias->cellWidget(index.row(),index.column()-1))->text());
+            }
+            registro.replace(4,strlen(((QLineEdit*)ui->tableWidget_categorias->cellWidget(index.row(),index.column()))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_categorias->cellWidget(index.row(),index.column()))->text());
+            qDebug() << "REGRISTRO: " << registro;
+            categoria.writerecord(registro.toStdString().c_str(),(((QLineEdit*)ui->tableWidget_categorias->cellWidget(index.row(),1))->text().toInt()));
+            crear_nuevaFila_Categorias();
+        }
+    }else{//SI ESTA MODIFICANDO
+        if(((QLineEdit*)listaNombreCate.at(index.row()))->text().isEmpty() || ((QLineEdit*)listaIdCate.at(index.row()))->text().isEmpty()){
+            QMessageBox::critical(this,"Error","Campos Vacios");
+
+        }else{
+            QString registro=((QLineEdit*)ui->tableWidget_categorias->cellWidget(index.row(),index.column()-1))->text();
+            registro.replace(4,strlen(((QLineEdit*)ui->tableWidget_categorias->cellWidget(index.row(),index.column()))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_categorias->cellWidget(index.row(),index.column()))->text());
+            qDebug() << "REGRISTRO modificado: " << registro.toStdString().c_str();
+            categoria.updaterecord(registro.toStdString().c_str(),((QLineEdit*)ui->tableWidget_categorias->cellWidget(index.row(),index.column()-1))->text().toInt());
+        }
+    }
+}
 void MainWindow::LineEdit_guardar_enter_Productos()
 {
 
@@ -339,7 +454,7 @@ void MainWindow::LineEdit_guardar_enter_Productos()
         }else{
             QString s=((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text();
             QString registro="";
-            qDebug()<<s.length();
+
             if(s.length()==1){
                 registro = "000                                "; // fin
                 registro.replace (3,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text());
@@ -357,44 +472,28 @@ void MainWindow::LineEdit_guardar_enter_Productos()
                 registro.replace (0,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text());
             }
             registro.replace(4,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-2))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-2))->text());
-            registro.replace(24,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-1))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-1))->text());
+            registro.replace(24,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-1))->text().toStdString().c_str())," "+((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-1))->text());
             registro.replace(28,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()))->text());
             qDebug() << "REGRISTRO: " << registro;
             producto.writerecord(registro.toStdString().c_str(),(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),1))->text().toInt()));
             crear_nuevaFila_Productos();
         }
-    }else{
+    }else{//SI ESTA MODIFICANDO
         if(((QLineEdit*)listaNombreProd.at(index.row()))->text().isEmpty() || ((QLineEdit*)listaIdCategoriaProd.at(index.row()))->text().isEmpty()|| ((QLineEdit*)listaPrecio.at(index.row()))->text().isEmpty()){
             QMessageBox::critical(this,"Error","Campos Vacios");
 
         }else{
-            QString s=((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-2))->text();
-            QString registro;
-            if(s.length()==1){
-                registro = "000                                "; // fin
-                registro.replace (3,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text());
-            }
-            if(s.length()==2){
-                registro = "00                                 "; // fin
-                registro.replace (2,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text());
-            }
-            if(s.length()==3){
-                registro = "0                                  "; // fin
-                registro.replace (1,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text());
-            }
-            if(s.length()==4){
-                registro = "                                   "; // fin
-                registro.replace (0,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text());
-            }
+            QString s=((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text();
+            QString registro=s;
+            qDebug() << "s: " << s;
             registro.replace(4,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-2))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-2))->text());
-            registro.replace(24,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-1))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-1))->text());
-            registro.replace(28,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()))->text());
-            qDebug() << "REGRISTRO: " << registro.toStdString().c_str();
-            producto.updaterecord(registro.toStdString().c_str(),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-2))->text().toInt());
+            registro.replace(23,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-1))->text().toStdString().c_str())," "+((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-1))->text());
+            registro.replace(28,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()))->text()+'\0');
+            qDebug() << "REGRISTRO modificado: " << registro.toStdString().c_str();
+            producto.updaterecord(registro.toStdString().c_str(),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text().toInt());
         }
     }
 }
-
 void MainWindow::crear_nuevaFila()
 {
         const int ultima_fila =  ui->tableWidget->rowCount();
@@ -473,7 +572,76 @@ void MainWindow::crear_nuevaFila()
         nombre->setFocus();
     //fin TAB=0
 }
+void MainWindow::crear_nuevaFila_Categorias()
+{
+    const int ultima_fila =  ui->tableWidget_categorias->rowCount();
+    int fila = ui->tableWidget_categorias->rowCount();
 
+    ui->tableWidget_categorias->insertRow(ultima_fila);
+    QPointer<QCheckBox> eliminar = new QCheckBox(this);
+    QPointer<QLineEdit>  id = new QLineEdit(this);
+    QPointer<QLineEdit>  nombre = new QLineEdit(this);
+    QRegExp validarNumeros("^[0-9]*$");
+    id->setMaxLength(4);
+    id->setValidator(new QRegExpValidator(validarNumeros, this));
+    id->setEnabled(false);
+    QString nuevo;
+    if(!categoria.AvailCat.empty()){ // verificamos si hay espacio disponible en el avial list
+        qDebug() << "1: avail no vacio";
+        if(leer){
+            qDebug() << "leer por primera vez cierto:";
+            leer = false;
+            if(((QLineEdit*)listaIdCate.at(listaIdCate.length()-1))->text().toInt() == categoria.AvailCat.front()){
+                qDebug() << "id anterior es igual al nuevo: eliminar";
+                categoria.AvailCat.pop_front();
+                if(!categoria.AvailCat.empty())
+                    id->setText(QString::number(categoria.AvailCat.front()));
+                else
+                    id->setText(QString::number(ui->tableWidget_categorias->rowCount()));
+
+            }
+            else{
+                if(categoria.AvailCat.empty()){
+                    id->setText(QString::number(ui->tableWidget_categorias->rowCount()));
+                    qDebug() << "asignacion de ultima fila:";
+                }
+                else{
+                    id->setText(QString::number(categoria.AvailCat.front()));
+                    qDebug() << "asignacion de avail:";
+                }
+            }
+        }else{
+            if(!categoria.AvailCat.empty()){
+                categoria.AvailCat.pop_front();
+                qDebug() << "deberia de borrar";
+                if(!categoria.AvailCat.empty()){
+                    categoria.AvailCat.sort();
+                    qDebug() << "Nuevo: " << nuevo;
+                    id->setText(QString::number(categoria.AvailCat.front()));
+                }else{
+
+                    id->setText(QString::number(ui->tableWidget_categorias->rowCount()));
+                }
+            }
+        }
+
+    }else{
+
+        id->setText(QString::number(ui->tableWidget_categorias->rowCount()));
+    }
+    id->setMaxLength(4);
+    nombre->setMaxLength(19);
+    connect(nombre,SIGNAL(returnPressed()),this,SLOT(LineEdit_guardar_enter_Categorias()));
+
+    ui->tableWidget_categorias->setCellWidget(ultima_fila,0,eliminar);
+    ui->tableWidget_categorias->setCellWidget(ultima_fila,1,id);
+    ui->tableWidget_categorias->setCellWidget(ultima_fila,2,nombre);
+
+    listaEliminarCate.append(eliminar);
+    listaIdCate.append(id);
+    listaNombreCate.append(nombre);
+    nombre->setFocus();
+}
 void MainWindow::crear_nuevaFila_Productos()
 {
     const int ultima_fila =  ui->tableWidget_productos->rowCount();
@@ -555,6 +723,7 @@ void MainWindow::crear_nuevaFila_Productos()
     nombre->setFocus();
 }
 
+
 void MainWindow::crear_nuevaFila(QString, QString, QString)
 {
 
@@ -570,6 +739,7 @@ void MainWindow::on_actionOpen_triggered()
     QString path = QFileDialog::getOpenFileName(this, tr("Open File"), QDir::homePath(), tr("Text File (*.txt)"));
     qDebug() << "path: " << path;
     //cliente = new ClientFile(path);
-    cliente.path = path;
-
+    if(path.endsWith("Cliente.txt")){
+        cliente.path = path;
+    }
 }
