@@ -25,21 +25,23 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_leer_clicked()
 {
-    cliente.path = "Clientes.txt";
 
     if(ui->tabWidget->currentIndex() == 0){ // inicio if clientes
-        const int si  =cliente.recordsSize();
-        int cont = 0;
-        char buffer [84];
 
-        while(cont < si ){
+        cliente.path = "Clientes.txt"; // asignamos el path de clientes para poder manejar el FILE IO de clientes
+        const int cantidad_registros  =cliente.recordsSize(); // obtenemos el offset ubicado al final del archivo
+        int cont = 0; // contador
+        char buffer [84]; // buffer para realizar la lectura del clientes
+
+        while(cont < cantidad_registros ){
 
             cliente.readrecord(buffer,cont);
-            buffer[83] = '\0';
-            cont += 84;
-            QString sId;
-            QString sNombre;
-            QString sCorreo;
+            buffer[83] = '\0'; //asignacion del null manualmente
+            cont += 84; // contar incrementa de acuerdo al tamaño del registro
+            QString sId; // QString para obtener el id
+            QString sNombre; // QString para obtener el nombre
+            QString sCorreo; // QString para obtener el correo
+
             for(int i = 0; i < 4; i++)
                 sId += buffer[i];
 
@@ -61,8 +63,12 @@ void MainWindow::on_pushButton_leer_clicked()
                 }
             }
 
-            const int ultima_fila =  ui->tableWidget->rowCount();
-            if(sId[0] == '*')
+            /* Por medio de los fors anteriores se obtenien los campos de cada registro
+             * de modo que puedan ser agregados al QTableWidget sin ningun problema
+             */
+
+            const int ultima_fila =  ui->tableWidget->rowCount(); // obtenemos ultima fila generada en el qtablewidget
+            if(sId[0] == '*') // verificamos si un archivo ha sido eliminado y asi no mostrarlo en la QTableWidget
                 continue;
 
             ui->tableWidget->insertRow(ultima_fila);
@@ -89,129 +95,130 @@ void MainWindow::on_pushButton_leer_clicked()
             ui->tableWidget->setCellWidget(ultima_fila,1,id);
             ui->tableWidget->setCellWidget(ultima_fila,2,nombre);
             ui->tableWidget->setCellWidget(ultima_fila,3,correo);
+            /* Las cuatros lineas anteriores representan la forma en la que
+             * agregamos los QLineEdit a cada campo de cada registro
+             */
 
             listaEliminar.append(eliminar);
             listaId.append(id);
-            listaNombre.append(nombre);
-            listaCorreo.append(correo);
+            /*Las dos lineas anteriores representan la forma en que ingresamos
+             * los datos del registro en listas diferentes para mentener un mejor orden
+             * de los archivos a la hora de trabajar con ellos
+             */
+
         } //fin while
 
     } // fin if clientes
     leer = true;
-    crear_nuevaFila();
+    crear_nuevaFila(); // metodo crear nueva fila
 }
 
 void MainWindow::on_pushButton_cerrar_clicked()
 {
-    cliente.updateAvail();
-    this->close();
+    cliente.updateAvail(); // actualizamos el availList del cliente
+    this->close(); // cerramos el programa
 }
 
 void MainWindow::on_pushButton_eliminar_clicked()
 {
     if(ui->tabWidget->currentIndex() == 0){ // if clientes
-        //int a;
+
         for (int i = 0;i < ui->tableWidget->rowCount(); i++){
             if(listaEliminar.at(i)->isChecked()){
                 cliente.eraserecord(atoi(((QLineEdit*)listaId.at(i))->text().toStdString().c_str()));
-                ui->tableWidget->removeRow(i);
+                /*En la linea anterior llamos al metodo de eraseRecord por medio del cual asignamos un
+                 * asterisco al inicio de cada registro para saber que le hemos eliminado a la hora de
+                 * realizar la lectura
+                 */
+
+                ui->tableWidget->removeRow(i); // eliminamos la fila del registro que ha sido seleccionado.
 
                 // eliminamos memoria dinamica
                 delete listaEliminar.at(i);
                 delete listaId.at(i);
-                delete listaNombre.at(i);
-                delete listaCorreo.at(i);
 
                 // quitamos el puntero de la lista
                 listaEliminar.removeAt(i);
                 listaId.removeAt(i);
-                listaNombre.removeAt(i);
-                listaCorreo.removeAt(i);
                 i = -1;
             }
         }
-        cliente.avail.sort();
-        ((QLineEdit*)listaId.at(listaId.length()-1))->setText(QString::number(cliente.avail.front()));
+        cliente.avail.sort(); // ordenmos el avail list de clientes
+        ((QLineEdit*)listaId.at(listaId.length()-1))->setText(QString::number(cliente.avail.front())); // asignacion del nuevo id a utilizar en el QTableWidget
     } // fin if clientes
 }
 
-void MainWindow::on_pushButton_guardar_clicked()
-{
-    if(ui->tabWidget->currentIndex() == 0){ // if clientes
-        qDebug() << ui->tabWidget->currentIndex();
-        QString registro = "                                                                                    "; // fin
-
-        for(int i = 0; i < ui->tableWidget->rowCount();i++){
-            registro.replace (0,strlen(((QLineEdit*)listaId.at(i))->text().toStdString().c_str()),((QLineEdit*)listaId.at(i))->text());
-            registro.replace(4,strlen(((QLineEdit*)listaNombre.at(i))->text().toStdString().c_str()),((QLineEdit*)listaNombre.at(i))->text());
-            registro.replace(43,strlen(((QLineEdit*)listaCorreo.at(i))->text().toStdString().c_str()),((QLineEdit*)listaCorreo.at(i))->text());
-        }
-        cliente.writerecord(registro.toStdString().c_str(),2);
-    }// fin if clientes
-}
 
 void MainWindow::LineEdit_guardar_enter()
 {
-    int rows = ui->tableWidget->rowCount();
-    qDebug() << rows << " filas:";
-    QWidget *widget = QApplication::focusWidget();
-    QModelIndex index = ui->tableWidget->indexAt(widget->pos());
+    int rows = ui->tableWidget->rowCount(); // obtenemos la ultima fila del QTableWidget
+    QWidget *widget = QApplication::focusWidget(); // obtenemos la fila en la que estamos situados a la hora de realizar enter en la ultima columna del registro
+    QModelIndex index = ui->tableWidget->indexAt(widget->pos()); // con esta variable index podemos obtener la fila y columna en la que estemos posicionados
+    QString name = ((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-1))->text(); // obtenemos el nombre del registro de la fila que estemos posicionados
+    QString email = ((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()))->text(); // obtenemos el email del registro de la fila en que estemos posicionados
 
-    if(index.row() == rows-1){
-        if(((QLineEdit*)listaNombre.at(index.row()))->text().isEmpty() || ((QLineEdit*)listaCorreo.at(index.row()))->text().isEmpty()){
+    if(index.row() == rows-1){ // inicio de if de validacion de ultima fila
+
+        if(name.isEmpty() || email.isEmpty()){
             QMessageBox::critical(this,"Error","Campos Vacios");
 
         }else{
-            QString s=((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-2))->text();
-            QString registro;
-            if(s.length()==1){
-                registro = "000                                                                                 "; // fin
-                registro.replace (3,strlen(((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-2))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-2))->text());
+            QString id =((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-2))->text(); // obtenemos el id del registro de la fila en que estemos posicionados
+            QString record; // creacion de un registro vacio para despues solomante sustituir los datos obtenidos de registro de la fila en que estemos posicionados
+            if(id.length()==1){ // verificamos si id es solamente de 1 digito.
+                record = "000                                                                                 "; // fin
+                record.replace (3,strlen(id.toStdString().c_str()),id);
             }
-            if(s.length()==2){
-                registro = "00                                                                                  "; // fin
-                registro.replace (2,strlen(((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-2))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-2))->text());
+            if(id.length()==2){ // verificamos si id es solamente de 2 digitos.
+                record = "00                                                                                  "; // fin
+                record.replace (2,strlen(id.toStdString().c_str()),id);
             }
-            if(s.length()==3){
-                registro = "0                                                                                   "; // fin
-                registro.replace (1,strlen(((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-2))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-2))->text());
+            if(id.length()==3){ // verificamos si id es solamente de 3 digitos.
+                record = "0                                                                                   "; // fin
+                record.replace (1,strlen(id.toStdString().c_str()),id);
             }
-            if(s.length()==4){
-                registro = "                                                                                    "; // fin
-                registro.replace (0,strlen(((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-2))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-2))->text());
+            if(id.length()==4){// verificamos si id es solamente de 4 digito.
+                record = "                                                                                    "; // fin
+                record.replace (0,strlen(id.toStdString().c_str()),id);
             }
-            registro.replace(4,strlen(((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-1))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-1))->text());
-            registro.replace(43,strlen(((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()))->text());
-            cliente.writerecord(registro.toStdString().c_str(),(((QLineEdit*)ui->tableWidget->cellWidget(index.row(),1))->text().toInt()));
-            crear_nuevaFila();
+            //    QString name = ((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-1))->text(); // obtenemos el nombre del registro de la fila que estemos posicionados
+            //   QString email = ((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()))->text(); // obtenemos el email del registro de la fila en que estemos posicionados
+            record.replace(4,strlen(name.toStdString().c_str()),name); // ingresamos el nombre al registro nuevo
+            record.replace(43,strlen(email.toStdString().c_str()),email); // ingresamos el email al registro nuevo
+            cliente.writerecord(record.toStdString().c_str(),(((QLineEdit*)ui->tableWidget->cellWidget(index.row(),1))->text().toInt())); // mandamos a guardar al archivo el nuevo registro
+            ui->statusBar->showMessage("Registro Guardado",2000);
+
+            crear_nuevaFila(); // creacion de una nueva fila
         }
     }else{
-        if(((QLineEdit*)listaNombre.at(index.row()))->text().isEmpty() || ((QLineEdit*)listaCorreo.at(index.row()))->text().isEmpty()){
+        if(name.isEmpty() || email.isEmpty()){
             QMessageBox::critical(this,"Error","Campos Vacios");
 
         }else{
-            QString s=((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-2))->text();
+            QString id =((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-2))->text();
             QString registro;
-            if(s.length()==1){
+            if(id.length()==1){
                 registro = "000                                                                                 "; // fin
-                registro.replace (3,strlen(((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-2))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-2))->text());
+                registro.replace (3,strlen(id.toStdString().c_str()),id);
             }
-            if(s.length()==2){
+            if(id.length()==2){
                 registro = "00                                                                                  "; // fin
-                registro.replace (2,strlen(((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-2))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-2))->text());
+                registro.replace (2,strlen(id.toStdString().c_str()),id);
             }
-            if(s.length()==3){
+            if(id.length()==3){
                 registro = "0                                                                                   "; // fin
-                registro.replace (1,strlen(((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-2))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-2))->text());
+                registro.replace (1,strlen(id.toStdString().c_str()),id);
             }
-            if(s.length()==4){
+            if(id.length()==4){
                 registro = "                                                                                    "; // fin
-                registro.replace (0,strlen(((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-2))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-2))->text());
+                registro.replace (0,strlen(id.toStdString().c_str()),id);
             }
-            registro.replace(4,strlen(((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-1))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-1))->text());
-            registro.replace(43,strlen(((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()))->text());
-
+            registro.replace(4,strlen(name.toStdString().c_str()),name);
+            registro.replace(43,strlen(email.toStdString().c_str()),email);
+            qDebug() << "update:";
             cliente.updaterecord(registro.toStdString().c_str(),((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-2))->text().toInt());
+            ui->statusBar->showMessage("Registro Modificado",2000);
+
         }
     }
 }
@@ -219,7 +226,6 @@ void MainWindow::LineEdit_guardar_enter()
 void MainWindow::crear_nuevaFila()
 {
     const int ultima_fila =  ui->tableWidget->rowCount();
-    int fila = ui->tableWidget->rowCount();
 
     ui->tableWidget->insertRow(ultima_fila);
     QPointer<QCheckBox> eliminar = new QCheckBox(this);
@@ -235,46 +241,37 @@ void MainWindow::crear_nuevaFila()
     id->setEnabled(false);
     QString nuevo;
     if(!cliente.avail.empty()){ // verificamos si hay espacio disponible en el avial list
-        qDebug() << "1: avail no vacio";
         if(leer){
-            qDebug() << "leer por primera vez cierto:";
             leer = false;
             if(((QLineEdit*)listaId.at(listaId.length()-1))->text().toInt() == cliente.avail.front()){
-                qDebug() << "id anterior es igual al nuevo: eliminar";
                 cliente.avail.pop_front();
                 if(!cliente.avail.empty())
                     id->setText(QString::number(cliente.avail.front()));
                 else
                     id->setText(QString::number(ui->tableWidget->rowCount()));
-
             }
             else{
                 if(cliente.avail.empty()){
                     id->setText(QString::number(ui->tableWidget->rowCount()));
-                    qDebug() << "asignacion de ultima fila:";
                 }
                 else{
                     id->setText(QString::number(cliente.avail.front()));
-                    qDebug() << "asignacion de avail:";
                 }
             }
         }else{
             if(!cliente.avail.empty()){
                 cliente.avail.pop_front();
-                qDebug() << "deberia de borrar";
+
                 if(!cliente.avail.empty()){
                     cliente.avail.sort();
-                    qDebug() << "Nuevo: " << nuevo;
                     id->setText(QString::number(cliente.avail.front()));
                 }else{
-
                     id->setText(QString::number(ui->tableWidget->rowCount()));
                 }
             }
         }
 
     }else{
-
         id->setText(QString::number(ui->tableWidget->rowCount()));
     }
     nombre->setMaxLength(39);
@@ -287,17 +284,9 @@ void MainWindow::crear_nuevaFila()
     ui->tableWidget->setCellWidget(ultima_fila,2,nombre);
     ui->tableWidget->setCellWidget(ultima_fila,3,correo);
 
-
     listaEliminar.append(eliminar);
     listaId.append(id);
-    listaNombre.append(nombre);
-    listaCorreo.append(correo);
     nombre->setFocus();
-}
-
-void MainWindow::crear_nuevaFila(QString, QString, QString)
-{
-
 }
 
 void MainWindow::on_actionNew_triggered()
@@ -308,8 +297,5 @@ void MainWindow::on_actionNew_triggered()
 void MainWindow::on_actionOpen_triggered()
 {
     QString path = QFileDialog::getOpenFileName(this, tr("Open File"), QDir::homePath(), tr("Text File (*.txt)"));
-    qDebug() << "path: " << path;
-    //cliente = new ClientFile(path);
     cliente.path = path;
-
 }

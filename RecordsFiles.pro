@@ -17,12 +17,14 @@ SOURCES += main.cpp\
     clientfile.cpp \
     tdafile.cpp \
     tdafsrecordfile.cpp \
-    TDARecordFile.cpp
+    TDARecordFile.cpp \
+    indexfile.cpp
 
 HEADERS  += mainwindow.h \
     clientfile.h \
     tdafile.h \
     tdafsrecordfile.h \
-    TDARecordFile.h
+    TDARecordFile.h \
+    indexfile.h
 
 FORMS    += mainwindow.ui

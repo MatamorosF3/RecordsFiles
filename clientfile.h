@@ -4,6 +4,13 @@
 #include <QString>
 #include <list>
 class ClientFile : public TDAFSRecordFile{
+
+    struct Cliente{
+        int id;
+        char nombre[40];
+        char correo[40];
+    };
+
 public:
     ClientFile();
     int readrecord(char*,int);

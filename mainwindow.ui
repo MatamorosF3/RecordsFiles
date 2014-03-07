@@ -6,16 +6,54 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>761</width>
-    <height>474</height>
+    <width>766</width>
+    <height>531</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
+   <layout class="QGridLayout" name="gridLayout_4">
+    <item row="1" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QPushButton" name="pushButton_leer">
+        <property name="text">
+         <string>Leer</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_eliminar">
+        <property name="text">
+         <string>Eliminar</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_cerrar">
+        <property name="text">
+         <string>Cerrar</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="styleSheet">
        <string notr="true"/>
@@ -27,8 +65,8 @@
        <attribute name="title">
         <string>Tab 1</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
-        <item>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="0">
          <widget class="QTableWidget" name="tableWidget">
           <column>
            <property name="text">
@@ -108,51 +146,6 @@
       </widget>
      </widget>
     </item>
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="QPushButton" name="pushButton_leer">
-        <property name="text">
-         <string>Leer</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButton_eliminar">
-        <property name="text">
-         <string>Eliminar</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButton_cerrar">
-        <property name="text">
-         <string>Cerrar</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButton_guardar">
-        <property name="text">
-         <string>guardar</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -160,7 +153,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>761</width>
+     <width>766</width>
      <height>21</height>
     </rect>
    </property>
