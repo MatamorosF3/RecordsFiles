@@ -1,23 +1,23 @@
-#include "clientfile.h"
+#include "catfile.h"
 #include <cstring>
 #include <string>
 #include <sstream>
 #include <iostream>
 #include <QDebug>
-ClientFile::ClientFile()
+Catfile::Catfile()
 {
 
 }
 
 
-int ClientFile::readrecord( char* rec, int offset){
+int Catfile::readrecord( char* rec, int offset){
 
-    this->open("Clientes.txt",ios_base::in);
+    this->open("Categories.txt",ios_base::in);
     this->seek(offset);
-    this->read(rec,84);
+    this->read(rec,24);
     this->close();
     if(offset == 0){
-        this->open("Avail.txt",ios_base::in | ios_base::out);
+        this->open("AvailCat.txt",ios_base::in | ios_base::out);
         char entero[2];
         string numero = "";
         int number;
@@ -29,40 +29,38 @@ int ClientFile::readrecord( char* rec, int offset){
             else{
                 if((number = atoi(numero.c_str())) == 0)
                     break;
-                avail.push_back(number);
+                AvailCat.push_back(number);
                 numero = "";
             }
         }
         this->close();
     }
-
-
     return 0;
 }
 //OJO
-int ClientFile::writerecord(const char *buffer, int ind){
-    this->open("Clientes.txt",ios_base::in | ios_base::out);
+int Catfile::writerecord(const char *buffer, int ind){
+    this->open("Categories.txt",ios_base::in | ios_base::out);
     if(ind == 1){
         this->seek(0);
     }
     if(ind != 1){
         ind--;
-        this->seek(ind*84);
+        this->seek(ind*24);
     }
 
-    this->write(buffer,84);
+    this->write(buffer,24);
     this->close();
     return 0;
 }
 
-int ClientFile::findrecord(int id){
+int Catfile::findrecord(int id){
     /*TDAFile f;
-    f.open("clientes.txt",ios::in);
+    f.open("Categories.txt",ios::in);
     int i=0,idd=-1;
     while(!f.isEOF()){
-        f.seek(84*i);
-        char [84] buffer;
-        f.read(buffer,84);
+        f.seek(24*i);
+        char [24] buffer;
+        f.read(buffer,24);
         buffer[83]='\0';
         string identidad="";
         stringstream ss;
@@ -80,66 +78,66 @@ int ClientFile::findrecord(int id){
     return idd;*/
 }
 
-int ClientFile::findrecord(const char* rec,int ind){
+int Catfile::findrecord(const char* rec,int ind){
 
     return 0;
 }
 
-void ClientFile::seek(int ind){
+void Catfile::seek(int ind){
     TDAFile::seek(ind);
 
 }
 
-void ClientFile::seek(ios::seekdir mode)
+void Catfile::seek(ios::seekdir mode)
 {
     TDAFile::seek(mode);
 }
 
-int ClientFile::tell(){
+int Catfile::tell(){
 
     return TDAFile::tell();
 
 }
 
-int ClientFile::eraserecord(int ind){
-    avail.push_back(ind);
-    this->open("Clientes.txt",ios_base::in | ios_base::out);
+int Catfile::eraserecord(int ind){
+    AvailCat.push_back(ind);
+    this->open("Categories.txt",ios_base::in | ios_base::out);
     if(ind == 1){
         this->seek(0);
         // this->seek(0);
     }
     if(ind != 1){
         ind--;
-        this->seek(ind*84);
-        //this->seek(ind*84);
+        this->seek(ind*24);
+        //this->seek(ind*24);
     }
 
-    if(!avail.empty())
-        qDebug() << " agrego al avail list, no esta vacia la lista";
+    if(!AvailCat.empty())
+        qDebug() << " agrego al AvailCat list, no esta vacia la lista";
     char asterisco [] = "*";
     this->write(asterisco,1);
     this->close();
     return 0;
 }
 
-int ClientFile::updaterecord(const char* rec, int ind){
-    this->open("Clientes.txt",ios_base::in | ios_base::out);
+int Catfile::updaterecord(const char* rec, int ind){
+    this->open("Categories.txt",ios_base::in | ios_base::out);
     if(ind == 1){
         this->seek(0);
     }
     if(ind != 1){
         ind--;
-        this->seek(ind*84);
+        this->seek(ind*24);
     }
 
-    this->write(rec,84);
+    this->write(rec,24);
     this->close();
     return 0;
 }
 
-int ClientFile::recordsSize()
+int Catfile::recordsSize()
 {
-    this->open("Clientes.txt");
+    this->open("Categories.txt");
     this->seek(ios_base::end);
     int tel = this->tell();
     this->close();
@@ -147,11 +145,11 @@ int ClientFile::recordsSize()
 
 }
 
-int ClientFile::updateAvail()
+int Catfile::updateAvailCat()
 {
-    this->open("Avail.txt",ios_base::out);
+    this->open("AvailCat.txt",ios_base::out);
 
-    for (std::list<int>::iterator it=avail.begin() ; it != avail.end(); ++it){
+    for (std::list<int>::iterator it=AvailCat.begin() ; it != AvailCat.end(); ++it){
         char ft[ (strlen(QString::number(*it).toStdString().c_str())) +2];
         ft[sizeof(ft) -1] = '\0';
         strcpy(ft,QString::number(*it).toStdString().c_str());

@@ -1,12 +1,11 @@
-#ifndef CLIENTFILE_H
-#define CLIENTFILE_H
+#ifndef CATFILE
+#define CATFILE
 #include "tdafsrecordfile.h"
-#include "linearindexfile.h"
 #include <QString>
 #include <list>
-class ClientFile : public TDAFSRecordFile{
+class Catfile : public TDAFSRecordFile{
 public:
-    ClientFile();
+    Catfile();
     int readrecord(char*,int);
     int writerecord(const char*,int ind);
     int findrecord(int);
@@ -17,10 +16,11 @@ public:
     int eraserecord(int);
     int updaterecord(const char*, int offset);
     int recordsSize();
-    int updateAvail();
+    int updateAvailCat();
+
     QString path;
-    list <int> avail;
-    //LinearIndexFile idx;
+    list <int> AvailCat;
+
 };
 
-#endif // CLIENTFILE_H
+#endif // CATFILE

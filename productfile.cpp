@@ -1,23 +1,22 @@
-#include "clientfile.h"
+#include "productfile.h"
 #include <cstring>
 #include <string>
 #include <sstream>
 #include <iostream>
 #include <QDebug>
-ClientFile::ClientFile()
+#include <stdio.h>
+
+ProductFile::ProductFile()
 {
-
 }
+int ProductFile::readrecord( char* rec, int offset){
 
-
-int ClientFile::readrecord( char* rec, int offset){
-
-    this->open("Clientes.txt",ios_base::in);
+    this->open("Productos.txt",ios_base::in);
     this->seek(offset);
-    this->read(rec,84);
+    this->read(rec,37);
     this->close();
     if(offset == 0){
-        this->open("Avail.txt",ios_base::in | ios_base::out);
+        this->open("AvailProductos.txt",ios_base::in | ios_base::out);
         char entero[2];
         string numero = "";
         int number;
@@ -35,34 +34,32 @@ int ClientFile::readrecord( char* rec, int offset){
         }
         this->close();
     }
-
-
     return 0;
 }
 //OJO
-int ClientFile::writerecord(const char *buffer, int ind){
-    this->open("Clientes.txt",ios_base::in | ios_base::out);
+int ProductFile::writerecord(const char *buffer, int ind){
+    this->open("Productos.txt",ios_base::in | ios_base::out);
     if(ind == 1){
         this->seek(0);
     }
     if(ind != 1){
         ind--;
-        this->seek(ind*84);
+        this->seek(ind*37);
     }
 
-    this->write(buffer,84);
+    this->write(buffer,37);
     this->close();
     return 0;
 }
 
-int ClientFile::findrecord(int id){
+int ProductFile::findrecord(int id){
     /*TDAFile f;
-    f.open("clientes.txt",ios::in);
+    f.open("Productos.txt",ios::in);
     int i=0,idd=-1;
     while(!f.isEOF()){
-        f.seek(84*i);
-        char [84] buffer;
-        f.read(buffer,84);
+        f.seek(37*i);
+        char [37] buffer;
+        f.read(buffer,37);
         buffer[83]='\0';
         string identidad="";
         stringstream ss;
@@ -80,38 +77,38 @@ int ClientFile::findrecord(int id){
     return idd;*/
 }
 
-int ClientFile::findrecord(const char* rec,int ind){
+int ProductFile::findrecord(const char* rec,int ind){
 
     return 0;
 }
 
-void ClientFile::seek(int ind){
+void ProductFile::seek(int ind){
     TDAFile::seek(ind);
 
 }
 
-void ClientFile::seek(ios::seekdir mode)
+void ProductFile::seek(ios::seekdir mode)
 {
     TDAFile::seek(mode);
 }
 
-int ClientFile::tell(){
+int ProductFile::tell(){
 
     return TDAFile::tell();
 
 }
 
-int ClientFile::eraserecord(int ind){
+int ProductFile::eraserecord(int ind){
     avail.push_back(ind);
-    this->open("Clientes.txt",ios_base::in | ios_base::out);
+    this->open("Productos.txt",ios_base::in | ios_base::out);
     if(ind == 1){
         this->seek(0);
         // this->seek(0);
     }
     if(ind != 1){
         ind--;
-        this->seek(ind*84);
-        //this->seek(ind*84);
+        this->seek(ind*37);
+        //this->seek(ind*37);
     }
 
     if(!avail.empty())
@@ -122,24 +119,25 @@ int ClientFile::eraserecord(int ind){
     return 0;
 }
 
-int ClientFile::updaterecord(const char* rec, int ind){
-    this->open("Clientes.txt",ios_base::in | ios_base::out);
+int ProductFile::updaterecord(const char* rec, int ind){
+    this->open("Productos.txt",ios_base::in | ios_base::out);
     if(ind == 1){
         this->seek(0);
     }
     if(ind != 1){
         ind--;
-        this->seek(ind*84);
+        this->seek(ind*37);
     }
 
-    this->write(rec,84);
+    this->write(rec,37);
     this->close();
+
     return 0;
 }
 
-int ClientFile::recordsSize()
+int ProductFile::recordsSize()
 {
-    this->open("Clientes.txt");
+    this->open("Productos.txt");
     this->seek(ios_base::end);
     int tel = this->tell();
     this->close();
@@ -147,20 +145,26 @@ int ClientFile::recordsSize()
 
 }
 
-int ClientFile::updateAvail()
-{
-    this->open("Avail.txt",ios_base::out);
+int ProductFile::updateAvail()
+{    
+    if(!avail.empty()){
 
-    for (std::list<int>::iterator it=avail.begin() ; it != avail.end(); ++it){
-        char ft[ (strlen(QString::number(*it).toStdString().c_str())) +2];
-        ft[sizeof(ft) -1] = '\0';
-        strcpy(ft,QString::number(*it).toStdString().c_str());
-        ft[sizeof(ft) - 2] = '\n';
-        this->write(ft,(sizeof(ft)) - 1);
+        this->open("AvailProductos.txt",ios_base::out);
+
+        for (std::list<int>::iterator it=avail.begin() ; it != avail.end(); ++it){
+            char ft[ (strlen(QString::number(*it).toStdString().c_str())) +2];
+            ft[sizeof(ft) -1] = '\0';
+            strcpy(ft,QString::number(*it).toStdString().c_str());
+            ft[sizeof(ft) - 2] = '\n';
+            this->write(ft,(sizeof(ft)) - 1);
+        }
+
+        this->close();
+    }else{
+        remove("AvailProductos.txt");
+        this->open("AvailProductos.txt",ios_base::out);
+        this->close();
     }
-
-    this->close();
-
 }
 
 
