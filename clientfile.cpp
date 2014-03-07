@@ -4,6 +4,7 @@
 #include <sstream>
 #include <iostream>
 #include <QDebug>
+#include <stdio.h>
 ClientFile::ClientFile()
 {
 
@@ -106,16 +107,12 @@ int ClientFile::eraserecord(int ind){
     this->open("Clientes.txt",ios_base::in | ios_base::out);
     if(ind == 1){
         this->seek(0);
-        // this->seek(0);
     }
     if(ind != 1){
         ind--;
         this->seek(ind*84);
-        //this->seek(ind*84);
     }
 
-    if(!avail.empty())
-        qDebug() << " agrego al avail list, no esta vacia la lista";
     char asterisco [] = "*";
     this->write(asterisco,1);
     this->close();
@@ -148,18 +145,24 @@ int ClientFile::recordsSize()
 }
 
 int ClientFile::updateAvail()
-{
-    this->open("Avail.txt",ios_base::out);
+{   if(!avail.empty()){
+        this->open("Avail.txt",ios_base::out);
 
-    for (std::list<int>::iterator it=avail.begin() ; it != avail.end(); ++it){
-        char ft[ (strlen(QString::number(*it).toStdString().c_str())) +2];
-        ft[sizeof(ft) -1] = '\0';
-        strcpy(ft,QString::number(*it).toStdString().c_str());
-        ft[sizeof(ft) - 2] = '\n';
-        this->write(ft,(sizeof(ft)) - 1);
+        for (std::list<int>::iterator it=avail.begin() ; it != avail.end(); ++it){
+            char ft[ (strlen(QString::number(*it).toStdString().c_str())) +2];
+            ft[sizeof(ft) -1] = '\0';
+            strcpy(ft,QString::number(*it).toStdString().c_str());
+            ft[sizeof(ft) - 2] = '\n';
+            this->write(ft,(sizeof(ft)) - 1);
+        }
+
+        this->close();
+    }else{
+        remove("Avail.txt");
+        this->open("Avail.txt",ios_base::out);
+        this->close();
     }
 
-    this->close();
 
 }
 

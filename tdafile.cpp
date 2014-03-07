@@ -6,9 +6,7 @@ TDAFile::TDAFile(){
 }
 
 TDAFile::TDAFile(const string & filename, ios_base::openmode mode ){
-    //this->fileName = filename;
-    //this->fileStream.open(filename.c_str(),mode);
-    this->fileStream.open(filename.c_str(),ios_base::in | ios_base::out);
+    this->fileStream.open(filename.c_str(),mode);
 
 }
 
@@ -18,6 +16,7 @@ TDAFile::~TDAFile(){
 bool TDAFile::open(const string& filename, ios_base::openmode mode){
     this->fileName = filename;
     this->fileStream.open(filename.c_str(),mode);
+<<<<<<< HEAD
     /*this->fileStream.open(f.c_str(),fstream::in |fstream::out);
     if(!fileStream.is_open()){//Se crea el archivo y se le escribe un espacio, ya que si no tiene un byte tiene problemas al momento de escribir
             fileStream.open(fileName.c_str(),fstream::out);
@@ -31,6 +30,9 @@ bool TDAFile::open(const string& filename, ios_base::openmode mode){
 
         return false;//No se pudo abrir el archivo
 */
+=======
+
+>>>>>>> e4f50335b997f6e14bc1df6cb11264c2f990d496
     if(!this->fileStream.is_open())
         return false;
     return true;
@@ -80,6 +82,11 @@ int TDAFile::isOK(){
 
 int TDAFile::tell(){
     return fileStream.tellg();
+}
+
+void TDAFile::trunc()
+{
+    this->fileStream.open(this->fileName.c_str(),ios_base::trunc);
 }
 
 void TDAFile::seek(int pos){

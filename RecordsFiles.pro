@@ -18,19 +18,27 @@ SOURCES += main.cpp\
     tdafile.cpp \
     tdafsrecordfile.cpp \
     TDARecordFile.cpp \
+<<<<<<< HEAD
     productfile.cpp \
     tdaindexfile.cpp \
     linearindexfile.cpp \
     catfile.cpp
+=======
+    indexfile.cpp
+>>>>>>> e4f50335b997f6e14bc1df6cb11264c2f990d496
 
 HEADERS  += mainwindow.h \
     clientfile.h \
     tdafile.h \
     tdafsrecordfile.h \
     TDARecordFile.h \
+<<<<<<< HEAD
     productfile.h \
     tdaindexfile.h \
     linearindexfile.h \
     catfile.h
+=======
+    indexfile.h
+>>>>>>> e4f50335b997f6e14bc1df6cb11264c2f990d496
 
 FORMS    += mainwindow.ui
