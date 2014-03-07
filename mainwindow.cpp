@@ -683,6 +683,11 @@ void MainWindow::crear_nuevaFila(QString, QString, QString)
 
 }
 
+void MainWindow::on_actionNew_triggered()
+{
+
+}
+
 void MainWindow::on_actionOpen_triggered()
 {
     QString path = QFileDialog::getOpenFileName(this, tr("Open File"), QDir::homePath(), tr("Text File (*.txt)"));

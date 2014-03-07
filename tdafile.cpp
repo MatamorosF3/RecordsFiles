@@ -16,23 +16,7 @@ TDAFile::~TDAFile(){
 bool TDAFile::open(const string& filename, ios_base::openmode mode){
     this->fileName = filename;
     this->fileStream.open(filename.c_str(),mode);
-<<<<<<< HEAD
-    /*this->fileStream.open(f.c_str(),fstream::in |fstream::out);
-    if(!fileStream.is_open()){//Se crea el archivo y se le escribe un espacio, ya que si no tiene un byte tiene problemas al momento de escribir
-            fileStream.open(fileName.c_str(),fstream::out);
-            fileStream.write(" ",1);
-            fileStream.flush();
-            fileStream.close();
-            fileStream.open(f.c_str(), fstream::in | fstream::out);
-        }
-        if (fileStream.is_open())
-            return true;//si no hubo problemas, signiica que esta abierto el archivo
 
-        return false;//No se pudo abrir el archivo
-*/
-=======
-
->>>>>>> e4f50335b997f6e14bc1df6cb11264c2f990d496
     if(!this->fileStream.is_open())
         return false;
     return true;
