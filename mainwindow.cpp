@@ -233,7 +233,7 @@ void MainWindow::on_pushButton_leer_clicked()
             IdCategoria->setMaxLength(4);
             IdCategoria->setText(sCategoria);\
 
-            precio->setMaxLength(7);
+            precio->setMaxLength(9);
             precio->setText(sPrecio);
             ui->tableWidget_productos->setCellWidget(ultima_fila,0,eliminar);
             ui->tableWidget_productos->setCellWidget(ultima_fila,1,id);
@@ -726,7 +726,7 @@ void MainWindow::crear_nuevaFila_Productos()
     id->setMaxLength(4);
     nombre->setMaxLength(19);
     idcategoria->setMaxLength(4);
-    precio->setMaxLength(7);
+    precio->setMaxLength(9);
     connect(precio,SIGNAL(returnPressed()),this,SLOT(LineEdit_guardar_enter_Productos()));
 
     ui->tableWidget_productos->setCellWidget(ultima_fila,0,eliminar);
