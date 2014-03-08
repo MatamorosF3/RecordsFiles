@@ -593,7 +593,73 @@ void MainWindow::crear_nuevaFila_Categorias()
 {
     const int ultima_fila =  ui->tableWidget_categorias->rowCount();
     int fila = ui->tableWidget_categorias->rowCount();
+
+    ui->tableWidget_categorias->insertRow(ultima_fila);
+    QPointer<QCheckBox> eliminar = new QCheckBox(this);
+    QPointer<QLineEdit>  id = new QLineEdit(this);
+    QPointer<QLineEdit>  nombre = new QLineEdit(this);
+    QRegExp validarNumeros("^[0-9]*$");
+    id->setMaxLength(4);
+    id->setValidator(new QRegExpValidator(validarNumeros, this));
+    id->setEnabled(false);
+    QString nuevo;
+    if(!categoria.AvailCat.empty()){ // verificamos si hay espacio disponible en el avial list
+        qDebug() << "1: avail no vacio";
+        if(leer){
+            qDebug() << "leer por primera vez cierto:";
+            leer = false;
+            if(((QLineEdit*)listaIdCate.at(listaIdCate.length()-1))->text().toInt() == categoria.AvailCat.front()){
+                qDebug() << "id anterior es igual al nuevo: eliminar";
+                categoria.AvailCat.pop_front();
+                if(!categoria.AvailCat.empty())
+                    id->setText(QString::number(categoria.AvailCat.front()));
+                else
+                    id->setText(QString::number(ui->tableWidget_categorias->rowCount()));
+
+            }
+            else{
+                if(categoria.AvailCat.empty()){
+                    id->setText(QString::number(ui->tableWidget_categorias->rowCount()));
+                    qDebug() << "asignacion de ultima fila:";
+                }
+                else{
+                    id->setText(QString::number(categoria.AvailCat.front()));
+                    qDebug() << "asignacion de avail:";
+                }
+            }
+        }else{
+            if(!categoria.AvailCat.empty()){
+                categoria.AvailCat.pop_front();
+                qDebug() << "deberia de borrar";
+                if(!categoria.AvailCat.empty()){
+                    categoria.AvailCat.sort();
+                    qDebug() << "Nuevo: " << nuevo;
+                    id->setText(QString::number(categoria.AvailCat.front()));
+                }else{
+
+                    id->setText(QString::number(ui->tableWidget_categorias->rowCount()));
+                }
+            }
+        }
+
+    }else{
+
+        id->setText(QString::number(ui->tableWidget_categorias->rowCount()));
+    }
+    id->setMaxLength(4);
+    nombre->setMaxLength(19);
+    connect(nombre,SIGNAL(returnPressed()),this,SLOT(LineEdit_guardar_enter_Categorias()));
+
+    ui->tableWidget_categorias->setCellWidget(ultima_fila,0,eliminar);
+    ui->tableWidget_categorias->setCellWidget(ultima_fila,1,id);
+    ui->tableWidget_categorias->setCellWidget(ultima_fila,2,nombre);
+
+    listaEliminarCate.append(eliminar);
+    listaIdCate.append(id);
+    listaNombreCate.append(nombre);
+    nombre->setFocus();
 }
+
 
 void MainWindow::crear_nuevaFila_Productos()
 {
