@@ -112,7 +112,7 @@ void MainWindow::on_pushButton_leer_clicked()
              */
 
         } //fin while
-    crear_nuevaFila(); // metodo crear nueva fila
+        crear_nuevaFila(); // metodo crear nueva fila
     } // fin if clientes
 
     if(ui->tabWidget->currentIndex() == 1){ // inicio if Categorias
@@ -220,7 +220,7 @@ void MainWindow::on_pushButton_leer_clicked()
             QPointer<QLineEdit>  IdCategoria = new QLineEdit(this);
             QPointer<QLineEdit>  precio = new QLineEdit(this);
             connect(precio,SIGNAL(returnPressed()),this,SLOT(LineEdit_guardar_enter_Productos()));
-                    QRegExp validarNumeros("^[0-9]*$");
+            QRegExp validarNumeros("^[0-9]*$");
 
             id->setText(sId);
             id->setMaxLength(4);
@@ -344,8 +344,8 @@ void MainWindow::on_pushButton_eliminar_clicked()
 
 void MainWindow::LineEdit_guardar_enter()
 {
-// <<<<< HEAD
- int rows = ui->tableWidget->rowCount(); // obtenemos la ultima fila del QTableWidget
+    // <<<<< HEAD
+    int rows = ui->tableWidget->rowCount(); // obtenemos la ultima fila del QTableWidget
     QWidget *widget = QApplication::focusWidget(); // obtenemos la fila en la que estamos situados a la hora de realizar enter en la ultima columna del registro
     QModelIndex index = ui->tableWidget->indexAt(widget->pos()); // con esta variable index podemos obtener la fila y columna en la que estemos posicionados
     QString name = ((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-1))->text(); // obtenemos el nombre del registro de la fila que estemos posicionados
@@ -484,19 +484,19 @@ void MainWindow::LineEdit_guardar_enter_Productos()
             QString registro="";
 
             if(s.length()==1){
-                registro = "000                                "; // fin
+                registro = "000                                 "; // fin
                 registro.replace (3,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text());
             }
             if(s.length()==2){
-                registro = "00                                 "; // fin
+                registro = "00                                  "; // fin
                 registro.replace (2,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text());
             }
             if(s.length()==3){
-                registro = "0                                  "; // fin
+                registro = "0                                   "; // fin
                 registro.replace (1,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text());
             }
             if(s.length()==4){
-                registro = "                                   "; // fin
+                registro = "                                    "; // fin
                 registro.replace (0,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text());
             }
             registro.replace(4,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-2))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-2))->text());
@@ -511,9 +511,10 @@ void MainWindow::LineEdit_guardar_enter_Productos()
             QMessageBox::critical(this,"Error","Campos Vacios");
 
         }else{
-            QString s=((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text();
-            QString registro=s;
-            qDebug() << "s: " << s;
+         //   QString id=((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text();
+            QString id = "0006";
+            QString registro = "                                    "; // fin
+            registro.replace(0,strlen(id.toStdString().c_str()),id);
             registro.replace(4,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-2))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-2))->text());
             registro.replace(24,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-1))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-1))->text());
             registro.replace(28,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()))->text());
@@ -591,8 +592,8 @@ void MainWindow::crear_nuevaFila()
 
 void MainWindow::crear_nuevaFila_Categorias()
 {
-    const int ultima_fila =  ui->tableWidget_categorias->rowCount();
-    int fila = ui->tableWidget_categorias->rowCount();
+    // const int ultima_fila =  ui->tableWidget_categorias->rowCount();
+    //int fila = ui->tableWidget_categorias->rowCount();
 }
 
 void MainWindow::crear_nuevaFila_Productos()

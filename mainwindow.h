@@ -49,7 +49,6 @@ private slots:
     void crear_nuevaFila_Categorias();
     void crear_nuevaFila(QString,QString,QString);
     void on_actionNew_triggered();
-
     void on_actionOpen_triggered();
 
 private:
