@@ -7,6 +7,7 @@
 #include "catfile.h"
 #include <QPointer>
 #include <QLineEdit>
+#include <QComboBox>
 #include <QCheckBox>
 namespace Ui {
 class MainWindow;
@@ -28,6 +29,7 @@ class MainWindow : public QMainWindow
     QList<QPointer<QLineEdit> > listaIdCate;
     QList<QPointer<QLineEdit> > listaNombreCate;
     QList<QPointer<QCheckBox> > listaEliminarCate;
+    QPointer<QComboBox> IdCat2;
 
 public:
     explicit MainWindow(QWidget *parent = 0);

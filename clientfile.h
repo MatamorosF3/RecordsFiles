@@ -7,7 +7,7 @@
 class ClientFile : public TDAFSRecordFile{
 
     struct Cliente{
-        int id;
+        char id[5];
         char nombre[40];
         char correo[40];
     };
@@ -27,6 +27,7 @@ public:
     int updateAvail();
     QString path;
     list <int> avail;
+    Cliente cliente;
     //LinearIndexFile idx;
 };
 
