@@ -173,9 +173,9 @@ void MainWindow::on_pushButton_leer_clicked()
             producto.readrecord(buffer,cont);
             //qDebug() <<buffer;
             buffer[36] = '\0';
-            cont += 37;
+            cont += 36;
             QString sId;//length de 4
-            QString sNombre;//length de 20
+            QString sNombre;//length de 19
             QString sCategoria;//length de 4
             QString sPrecio;//length de 9
             for(int i = 0; i < 4; i++){
@@ -190,8 +190,8 @@ void MainWindow::on_pushButton_leer_clicked()
                     }
                 }
             }
-            for(int i = 23; i < 28; i++){
-                if(i != 28){
+            for(int i = 23; i < 27; i++){
+                if(i != 27){
                     if(buffer[i] == ' ' && buffer[i+1] == ' ')
                         break;
                     else{
@@ -199,7 +199,7 @@ void MainWindow::on_pushButton_leer_clicked()
                     }
                 }
             }
-            for(int i = 28; i < 36; i++){
+            for(int i = 27; i < 36; i++){
                 if(i != 36){
                     if(buffer[i] == ' ' && buffer[i+1] == ' ')
                         break;

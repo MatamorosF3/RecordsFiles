@@ -13,7 +13,7 @@ int ProductFile::readrecord( char* rec, int offset){
 
     this->open("Productos.txt",ios_base::in);
     this->seek(offset);
-    this->read(rec,37);
+    this->read(rec,36);
     this->close();
     if(offset == 0){
         this->open("AvailProductos.txt",ios_base::in | ios_base::out);
@@ -44,10 +44,10 @@ int ProductFile::writerecord(const char *buffer, int ind){
     }
     if(ind != 1){
         ind--;
-        this->seek(ind*37);
+        this->seek(ind*36);
     }
 
-    this->write(buffer,37);
+    this->write(buffer,36);
     this->close();
     return 0;
 }
@@ -57,9 +57,9 @@ int ProductFile::findrecord(int id){
     f.open("Productos.txt",ios::in);
     int i=0,idd=-1;
     while(!f.isEOF()){
-        f.seek(37*i);
-        char [37] buffer;
-        f.read(buffer,37);
+        f.seek(36*i);
+        char [36] buffer;
+        f.read(buffer,36);
         buffer[83]='\0';
         string identidad="";
         stringstream ss;
@@ -107,8 +107,8 @@ int ProductFile::eraserecord(int ind){
     }
     if(ind != 1){
         ind--;
-        this->seek(ind*37);
-        //this->seek(ind*37);
+        this->seek(ind*36);
+        //this->seek(ind*36);
     }
 
     if(!avail.empty())
@@ -126,10 +126,10 @@ int ProductFile::updaterecord(const char* rec, int ind){
     }
     if(ind != 1){
         ind--;
-        this->seek(ind*37);
+        this->seek(ind*36);
     }
 
-    this->write(rec,37);
+    this->write(rec,36);
     this->close();
 
     return 0;
