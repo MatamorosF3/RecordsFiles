@@ -165,6 +165,90 @@ void MainWindow::on_pushButton_leer_clicked()
         crear_nuevaFila_Categorias();
     } // fin if categorias
     if(ui->tabWidget->currentIndex() == 2){ // inicio if productos
+        const int si  =producto.recordsSize();
+        int cont = 0;
+        char buffer [37];
+        while(cont < si ){
+
+            producto.readrecord(buffer,cont);
+            //qDebug() <<buffer;
+            buffer[36] = '\0';
+            cont += 36;
+            QString sId;//length de 4
+            QString sNombre;//length de 19
+            QString sCategoria;//length de 4
+            QString sPrecio;//length de 9
+            for(int i = 0; i < 4; i++){
+                sId += buffer[i];
+            }
+            for(int i = 4; i < 23;i++){
+                if(i != 23){
+                    if(buffer[i] == ' ' && buffer[i+1] == ' ')
+                        break;
+                    else{
+                        sNombre += buffer[i];
+                    }
+                }
+            }
+            for(int i = 23; i < 27; i++){
+                if(i != 27){
+                    if(buffer[i] == ' ' && buffer[i+1] == ' ')
+                        break;
+                    else{
+                        sCategoria += buffer[i];\
+                    }
+                }
+            }
+            for(int i = 27; i < 36; i++){
+                if(i != 36){
+                    if(buffer[i] == ' ' && buffer[i+1] == ' ')
+                        break;
+                    else{
+                        sPrecio += buffer[i];
+                    }
+                }
+            }
+
+            const int ultima_fila =  ui->tableWidget_productos->rowCount();
+            if(sId[0] == '*')
+                continue;
+
+            ui->tableWidget_productos->insertRow(ultima_fila);
+            QPointer<QCheckBox> eliminar = new QCheckBox(this);
+            QPointer<QLineEdit>  id = new QLineEdit(this);
+            QPointer<QLineEdit>  nombre = new QLineEdit(this);
+            QPointer<QLineEdit>  IdCategoria = new QLineEdit(this);
+            QPointer<QLineEdit>  precio = new QLineEdit(this);
+            connect(precio,SIGNAL(returnPressed()),this,SLOT(LineEdit_guardar_enter_Productos()));
+            QRegExp validarNumeros("^[0-9]*$");
+
+            id->setText(sId);
+            id->setMaxLength(4);
+            id->setValidator(new QRegExpValidator(validarNumeros, this));
+            id->setEnabled(false);
+
+            nombre->setMaxLength(19);
+            nombre->setText(sNombre);
+
+            IdCategoria->setMaxLength(4);
+            IdCategoria->setText(sCategoria);\
+
+            precio->setMaxLength(9);
+            precio->setText(sPrecio);
+            ui->tableWidget_productos->setCellWidget(ultima_fila,0,eliminar);
+            ui->tableWidget_productos->setCellWidget(ultima_fila,1,id);
+            ui->tableWidget_productos->setCellWidget(ultima_fila,2,nombre);
+            ui->tableWidget_productos->setCellWidget(ultima_fila,3,IdCategoria);
+            ui->tableWidget_productos->setCellWidget(ultima_fila,4,precio);
+
+            listaEliminarProd.append(eliminar);
+            listaIdProd.append(id);
+            listaNombreProd.append(nombre);
+            listaIdCategoriaProd.append(IdCategoria);
+            listaPrecio.append(precio);
+        } //fin while
+        crear_nuevaFila_Productos();
+
 
     } // fin if productos
 
