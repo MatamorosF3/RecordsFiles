@@ -181,7 +181,7 @@ void MainWindow::on_pushButton_leer_clicked()
             for(int i = 0; i < 4; i++){
                 sId += buffer[i];
             }
-            for(int i = 4; i < 24;i++){
+            for(int i = 4; i < 23;i++){
                 if(i != 23){
                     if(buffer[i] == ' ' && buffer[i+1] == ' ')
                         break;
@@ -190,7 +190,7 @@ void MainWindow::on_pushButton_leer_clicked()
                     }
                 }
             }
-            for(int i = 24; i < 29; i++){
+            for(int i = 23; i < 28; i++){
                 if(i != 28){
                     if(buffer[i] == ' ' && buffer[i+1] == ' ')
                         break;
@@ -199,8 +199,8 @@ void MainWindow::on_pushButton_leer_clicked()
                     }
                 }
             }
-            for(int i = 28; i < 38; i++){
-                if(i != 37){
+            for(int i = 28; i < 36; i++){
+                if(i != 36){
                     if(buffer[i] == ' ' && buffer[i+1] == ' ')
                         break;
                     else{
@@ -481,27 +481,27 @@ void MainWindow::LineEdit_guardar_enter_Productos()
             QMessageBox::critical(this,"Error","Campos Vacios");
         }else{
             QString s=((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text();
-            QString registro="";
+            QString registro="                                     ";
 
             if(s.length()==1){
-                registro = "000                                 "; // fin
+                registro = "000                                  "; // fin
                 registro.replace (3,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text());
             }
             if(s.length()==2){
-                registro = "00                                  "; // fin
+                registro = "00                                   "; // fin
                 registro.replace (2,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text());
             }
             if(s.length()==3){
-                registro = "0                                   "; // fin
+                registro = "0                                    "; // fin
                 registro.replace (1,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text());
             }
             if(s.length()==4){
-                registro = "                                    "; // fin
+                registro = "                                     "; // fin
                 registro.replace (0,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text());
             }
             registro.replace(4,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-2))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-2))->text());
-            registro.replace(24,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-1))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-1))->text());
-            registro.replace(28,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()))->text());
+            registro.replace(23,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-1))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-1))->text());
+            registro.replace(27,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()))->text());
             qDebug() << "REGRISTRO: " << registro;
             producto.writerecord(registro.toStdString().c_str(),(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),1))->text().toInt()));
             crear_nuevaFila_Productos();
@@ -511,13 +511,13 @@ void MainWindow::LineEdit_guardar_enter_Productos()
             QMessageBox::critical(this,"Error","Campos Vacios");
 
         }else{
-            //   QString id=((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text();
-            QString id = "0006";
-            QString registro = "                                    "; // fin
+            QString id=((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text();
+
+            QString registro = "                                     "; // fin
             registro.replace(0,strlen(id.toStdString().c_str()),id);
             registro.replace(4,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-2))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-2))->text());
-            registro.replace(24,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-1))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-1))->text());
-            registro.replace(28,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()))->text());
+            registro.replace(23,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-1))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-1))->text());
+            registro.replace(27,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()))->text());
             qDebug() << "REGRISTRO modificado: " << registro.toStdString().c_str();
             producto.updaterecord(registro.toStdString().c_str(),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text().toInt());
         }
