@@ -118,20 +118,21 @@ void MainWindow::on_pushButton_leer_clicked()
     if(ui->tabWidget->currentIndex() == 1){ // inicio if Categorias
         const int si  =categoria.recordsSize();
         int cont = 0;
-        char buffer [24];
+        char buffer [25];
+        //qDebug() <<"Record Size: "<<si;
         while(cont < si ){
 
             categoria.readrecord(buffer,cont);
             //qDebug() <<buffer;
-            buffer[23] = '\0';
+            buffer[24] = '\0';
             cont += 24;
             QString sId;//length de 4
             QString sNombre;//length de 20
             for(int i = 0; i < 4; i++){
                 sId += buffer[i];
             }
-            for(int i = 4; i < 24;i++){
-                if(i != 23){
+            for(int i = 4; i < 25;i++){
+                if(i != 24){
                     if(buffer[i] == ' ' && buffer[i+1] == ' ')
                         break;
                     else{
@@ -152,7 +153,7 @@ void MainWindow::on_pushButton_leer_clicked()
             id->setMaxLength(4);
             id->setValidator(new QRegExpValidator(validarNumeros, this));
             id->setEnabled(false);
-            nombre->setMaxLength(19);
+            nombre->setMaxLength(20);
             nombre->setText(sNombre);
             ui->tableWidget_categorias->setCellWidget(ultima_fila,0,eliminar);
             ui->tableWidget_categorias->setCellWidget(ultima_fila,1,id);
@@ -261,6 +262,7 @@ void MainWindow::on_pushButton_cerrar_clicked()
 
     cliente.updateAvail(); // actualizamos el availList del cliente
     producto.updateAvail(); // actualizamos el availList de producto
+    categoria.updateAvailCat();//actualizamos el availList de categoria
     this->close(); // cerramos el programa
 }
 
