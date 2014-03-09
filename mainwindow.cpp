@@ -3,9 +3,11 @@
 #include <QDebug>
 #include "clientfile.h"
 #include "tdaindexfile.h"
+#include "tdafile.h"
 #include <QMessageBox>
 #include <QFileDialog>
 #include <list>
+#include <time.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -24,14 +26,14 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_leer_clicked()
 {
-   // cliente.path = "Clientes.txt";
+    // cliente.path = "Clientes.txt";
     producto.path= "Productos.txt";
     categoria.path= "Categories.txt";
     
 
     if(ui->tabWidget->currentIndex() == 0 || ui->tabWidget->currentIndex() == 1 || ui->tabWidget->currentIndex() == 2){ // inicio if clientes
 
-      cliente.path = "Clientes.txt"; // asignamos el path de clientes para poder manejar el FILE IO de clientes
+        cliente.path = "Clientes.txt"; // asignamos el path de clientes para poder manejar el FILE IO de clientes
         const int cantidad_registros  =cliente.recordsSize(); // obtenemos el offset ubicado al final del archivo
         int cont = 0; // contador
         char buffer [84]; // buffer para realizar la lectura del clientes
@@ -225,6 +227,9 @@ void MainWindow::on_pushButton_leer_clicked()
             for (int i = 0;i < ui->tableWidget_categorias->rowCount()-1; i++){ // inicio for comboBox
                 IdCat->addItem(((QLineEdit*)ui->tableWidget_categorias->cellWidget(i,1))->text());
                 qDebug() << "categoria: " <<sCategoria;
+            }
+            for (int i = 0;i < ui->tableWidget_categorias->rowCount()-1; i++){
+
                 IdCat->setCurrentIndex(i);
                 qDebug() << "ComboBox:" << IdCat->currentText();
 
@@ -257,7 +262,7 @@ void MainWindow::on_pushButton_leer_clicked()
             ui->tableWidget_productos->setCellWidget(ultima_fila,1,id);
             ui->tableWidget_productos->setCellWidget(ultima_fila,2,nombre);
 
-           // IdCat->setCurrentIndex(ultima_fila);
+            // IdCat->setCurrentIndex(ultima_fila);
             ui->tableWidget_productos->setCellWidget(ultima_fila,3,IdCat);
             ui->tableWidget_productos->setCellWidget(ultima_fila,4,precio);
 
@@ -483,7 +488,7 @@ void MainWindow::LineEdit_guardar_enter_Categorias()
 
         }else{
             qDebug() << "Modificando categoria";
-             QString registro="                        ";
+            QString registro="                        ";
             QString id=((QLineEdit*)ui->tableWidget_categorias->cellWidget(index.row(),index.column()-1))->text();
             registro.replace(0, strlen(id.toStdString().c_str()),id );
             qDebug() << "registro: " << registro;
@@ -503,7 +508,7 @@ void MainWindow::LineEdit_guardar_enter_Productos()
     QModelIndex index = ui->tableWidget_productos->indexAt(widget->pos());
 
     if(index.row() == rows-1){
-//|| ((QLineEdit*)listaIdCategoriaProd.at(index.row()))->text().isEmpty()
+        //|| ((QLineEdit*)listaIdCategoriaProd.at(index.row()))->text().isEmpty()
         if(((QLineEdit*)listaNombreProd.at(index.row()))->text().isEmpty()  || ((QLineEdit*)listaPrecio.at(index.row()))->text().isEmpty()){
             QMessageBox::critical(this,"Error","Campos Vacios");
         }else{
@@ -534,7 +539,7 @@ void MainWindow::LineEdit_guardar_enter_Productos()
             crear_nuevaFila_Productos();
         }
     }else{//SI ESTA MODIFICANDO
-      //  ((QLineEdit*)listaIdCategoriaProd.at(index.row()))->text().isEmpty()||
+        //  ((QLineEdit*)listaIdCategoriaProd.at(index.row()))->text().isEmpty()||
         if(((QLineEdit*)listaNombreProd.at(index.row()))->text().isEmpty() ||  ((QLineEdit*)listaPrecio.at(index.row()))->text().isEmpty()){
             QMessageBox::critical(this,"Error","Campos Vacios");
 
@@ -697,7 +702,7 @@ void MainWindow::crear_nuevaFila_Productos()
 
     ui->tableWidget_productos->insertRow(ultima_fila);
     QPointer<QCheckBox> eliminar = new QCheckBox(this);
-    QPointer<QLineEdit>  id = new QLineEdit(this);
+    QPointer<QLineEdit>  id = new   QLineEdit(this);
     QPointer<QLineEdit>  nombre = new QLineEdit(this);
     QPointer<QLineEdit>  idcategoria = new QLineEdit(this);
     QPointer<QLineEdit>  precio = new QLineEdit(this);
@@ -792,9 +797,161 @@ void MainWindow::on_actionOpen_triggered()
 {
     QString path = QFileDialog::getOpenFileName(this, tr("Open File"), QDir::homePath(), tr("Text File (*.txt)"));
     //if(path.endsWith("Cliente.txt")){
-      //  cliente.path = path;
+    //  cliente.path = path;
     //}
     cliente.path = path;
     on_pushButton_leer_clicked();
+
+}
+
+void MainWindow::on_actionGenerar_Factura_triggered()
+{
+    TDAFile headFact;
+    headFact.open("Encabezado.txt",ios_base::out);
+    TDAFile DetailFact;
+    DetailFact.open("Detalle.txt",ios_base::out);
+    srand (time(NULL));
+    QString sGen="";
+    QString sEncabezado[7]={"Lun","Mar","Mie","Jue","Vie","Sab","Dom"};
+    QString sMeses[4]={"Ene","Feb","Mar","Abr"};
+    int l=0;//indices de dias
+    int cont=0;//contador de facturas
+    sGen="";//generador de fechas
+    QString idfact;//id de la factura
+    QString idcli;//id de cliente
+    int randcli;//generador de cliente random
+    int cts=ui->tableWidget->rowCount()-1;//cantidad de clientes
+    int prods=ui->tableWidget_productos->rowCount()-1;//cantidad de productos
+    for(int j=0;j<4;j++){//meses
+        for(int k=1;k<=30;k++){//dias de la semana
+            if(l==7){//resetear indice de dias
+                l=0;
+            }
+            for(int m=8;m<21;m++){//horas
+                for(int n=0;n<60;n+=((rand()%15)+1)){//minutos
+                    //sGen+=sMeses[j]+" "+k+" "+sEncabezado[l]+" "+m+":"+n;
+                    sGen.append(sMeses[j]);
+                    if(k<10){
+                        sGen.append("0");
+                    }
+                    sGen.append(QString::number(k));
+                    sGen.append(sEncabezado[l]);
+                    if(m<10){
+                        sGen.append("0");
+                    }
+                    sGen.append(QString::number(m));
+                    sGen.append(":");
+                    if(n<10){
+                        sGen.append("0");
+                    }
+                    sGen.append(QString::number(n));
+                    //qDebug() << sGen;
+
+                    cont++;
+                    randcli=(rand()%cts)+1;
+                    if(randcli<10){ // verificamos si id es solamente de 1 digito.
+                        idcli="000  ";
+                        idcli.replace(3,strlen((QString::number(randcli)).toStdString().c_str()),QString::number(randcli));
+                    }else
+                        if(randcli<100){ // verificamos si id es solamente de 2 digitos.
+                            idcli="00   ";
+                            idcli.replace(2,strlen((QString::number(randcli)).toStdString().c_str()),QString::number(randcli));
+                        }else
+                            if(randcli<1000){ // verificamos si id es solamente de 3 digitos.
+                                idcli="0    ";
+                                idcli.replace(1,strlen((QString::number(randcli)).toStdString().c_str()),QString::number(randcli));
+                            }
+                            else
+                                if(randcli<10000){// verificamos si id es solamente de 4 digito.
+                                    idcli="     ";
+                                    idcli.replace(0,strlen((QString::number(randcli)).toStdString().c_str()),QString::number(randcli));
+                                }
+                    //generar ID de Factura
+                    if(cont<10){ // verificamos si id es solamente de 1 digito.
+                        idfact="0000  ";
+                        idfact.replace(4,strlen((QString::number(cont)).toStdString().c_str()),QString::number(cont));
+                    }else
+                        if(cont<100){ // verificamos si id es solamente de 2 digitos.
+                            idfact="000   ";
+                            idfact.replace(3,strlen((QString::number(cont)).toStdString().c_str()),QString::number(cont));
+                        }else
+                            if(cont<1000){ // verificamos si id es solamente de 3 digitos.
+                                idfact="00    ";
+                                idfact.replace(2,strlen((QString::number(cont)).toStdString().c_str()),QString::number(cont));
+                            }
+                            else
+                                if(cont<10000){// verificamos si id es solamente de 4 digito.
+                                    idfact="0     ";
+                                    idfact.replace(1,strlen((QString::number(cont)).toStdString().c_str()),QString::number(cont));
+                                }
+                                else
+                                    if(cont<100000){// verificamos si id es solamente de 4 digito.
+                                        idfact="      ";
+                                        idfact.replace(0,strlen((QString::number(cont)).toStdString().c_str()),QString::number(cont));
+                                    }
+                    qDebug() << "IDFactura: " << idfact;
+                    qDebug() << "Fecha: " << sGen;
+                    qDebug() << "IDCliente: " << idcli;
+                    qDebug() << "----------------------";
+
+                    QString cabecera="                         ";
+                    cabecera.replace(0,strlen(idfact.toStdString().c_str()),idfact);
+                    cabecera.replace(6,strlen(sGen.toStdString().c_str()),sGen);
+                    cabecera.replace(20,strlen(idcli.toStdString().c_str()),idcli);
+                    /*cabecera.append(sGen);
+                    cabecera.append(" ");
+                    cabecera.append(idcli);*/
+                    const char * cad=cabecera.toStdString().c_str();
+                    headFact.write(cabecera.toStdString().c_str(),25);
+
+                    qDebug() << "cabecera: " << cabecera;
+                    qDebug() << "sizeOf(cabecera): " << sizeof(cabecera);
+                    idcli.clear();
+                    cabecera.clear();
+
+
+                    for(int h=0;h<((rand()%10)+1);h++){
+                        int randprod=(rand()%prods)+1;
+                        int cant=(rand()%5)+1;
+                        QString sIdProd="";
+                        if(randprod<10){ // verificamos si id es solamente de 1 digito.
+                            sIdProd="000  ";
+                            sIdProd.replace(3,strlen((QString::number(randprod)).toStdString().c_str()),QString::number(randprod));
+                        }else
+                            if(randprod<100){ // verificamos si id es solamente de 2 digitos.
+                                sIdProd="00   ";
+                                sIdProd.replace(2,strlen((QString::number(randprod)).toStdString().c_str()),QString::number(randprod));
+                            }else
+                                if(randprod<1000){ // verificamos si id es solamente de 3 digitos.
+                                    sIdProd="0    ";
+                                    sIdProd.replace(1,strlen((QString::number(randprod)).toStdString().c_str()),QString::number(randprod));
+                                }
+                                else
+                                    if(randprod<10000){// verificamos si id es solamente de 4 digito.
+                                        sIdProd="     ";
+                                        sIdProd.replace(0,strlen((QString::number(randprod)).toStdString().c_str()),QString::number(randprod));
+                                    }
+                        QString sCant=QString::number(cant);
+                        qDebug() << "IDProd: " << sIdProd;
+                        qDebug() << "Cantidad: " << sCant;
+                        qDebug() << "______________________";
+                        QString detalle;
+                        detalle.append(idfact);
+                        detalle.append(sIdProd);
+                        detalle.append(sCant);
+                        DetailFact.write(detalle.toStdString().c_str(),12);
+                        detalle.clear();
+                    }
+                    sGen.clear();
+                    idfact.clear();
+                }//fin minutos
+            }
+            l++;
+        }
+
+    }
+    headFact.close();
+    DetailFact.close();
+    qDebug() << cont;
 
 }

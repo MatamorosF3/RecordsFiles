@@ -230,6 +230,7 @@
     </property>
     <addaction name="actionOpen"/>
     <addaction name="actionNew"/>
+    <addaction name="actionGenerar_Factura"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -250,6 +251,11 @@
   <action name="actionNew">
    <property name="text">
     <string>New</string>
+   </property>
+  </action>
+  <action name="actionGenerar_Factura">
+   <property name="text">
+    <string>Generar Factura</string>
    </property>
   </action>
  </widget>
