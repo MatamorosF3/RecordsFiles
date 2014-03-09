@@ -13,10 +13,20 @@ ClientFile::ClientFile()
 
 int ClientFile::readrecord( char* rec, int offset){
 
-    this->open("Clientes.txt",ios_base::in);
+    this->open(path.toStdString().c_str(),ios_base::in);
     this->seek(offset);
     this->read(rec,84);
+
+    // otra forma de leer los archivos
+    /*this->read((char*)&cliente,84);
+    cliente.id[4] = '\0';
+    cliente.correo[38] = '\0';
+    cliente.nombre[38] = '\0';
+    */
+
+
     this->close();
+
     if(offset == 0){
         this->open("Avail.txt",ios_base::in | ios_base::out);
         char entero[2];
@@ -42,7 +52,7 @@ int ClientFile::readrecord( char* rec, int offset){
 }
 //OJO
 int ClientFile::writerecord(const char *buffer, int ind){
-    this->open("Clientes.txt",ios_base::in | ios_base::out);
+    this->open(path.toStdString().c_str(),ios_base::in | ios_base::out);
     if(ind == 1){
         this->seek(0);
     }
@@ -104,7 +114,7 @@ int ClientFile::tell(){
 
 int ClientFile::eraserecord(int ind){
     avail.push_back(ind);
-    this->open("Clientes.txt",ios_base::in | ios_base::out);
+    this->open(path.toStdString().c_str(),ios_base::in | ios_base::out);
     if(ind == 1){
         this->seek(0);
     }
@@ -120,7 +130,7 @@ int ClientFile::eraserecord(int ind){
 }
 
 int ClientFile::updaterecord(const char* rec, int ind){
-    this->open("Clientes.txt",ios_base::in | ios_base::out);
+    this->open(path.toStdString().c_str(),ios_base::in | ios_base::out);
     if(ind == 1){
         this->seek(0);
     }
@@ -136,7 +146,7 @@ int ClientFile::updaterecord(const char* rec, int ind){
 
 int ClientFile::recordsSize()
 {
-    this->open("Clientes.txt");
+    this->open(path.toStdString().c_str());
     this->seek(ios_base::end);
     int tel = this->tell();
     this->close();
@@ -145,7 +155,8 @@ int ClientFile::recordsSize()
 }
 
 int ClientFile::updateAvail()
-{   if(!avail.empty()){
+{
+    if(!avail.empty()){
         this->open("Avail.txt",ios_base::out);
 
         for (std::list<int>::iterator it=avail.begin() ; it != avail.end(); ++it){

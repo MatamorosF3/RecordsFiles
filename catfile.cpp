@@ -147,18 +147,23 @@ int Catfile::recordsSize()
 
 int Catfile::updateAvailCat()
 {
-    this->open("AvailCat.txt",ios_base::out);
+    if(!AvailCat.empty()){
+            this->open("AvailCat.txt",ios_base::out);
 
-    for (std::list<int>::iterator it=AvailCat.begin() ; it != AvailCat.end(); ++it){
-        char ft[ (strlen(QString::number(*it).toStdString().c_str())) +2];
-        ft[sizeof(ft) -1] = '\0';
-        strcpy(ft,QString::number(*it).toStdString().c_str());
-        ft[sizeof(ft) - 2] = '\n';
-        this->write(ft,(sizeof(ft)) - 1);
-    }
+            for (std::list<int>::iterator it=AvailCat.begin() ; it != AvailCat.end(); ++it){
+                char ft[ (strlen(QString::number(*it).toStdString().c_str())) +2];
+                ft[sizeof(ft) -1] = '\0';
+                strcpy(ft,QString::number(*it).toStdString().c_str());
+                ft[sizeof(ft) - 2] = '\n';
+                this->write(ft,(sizeof(ft)) - 1);
+            }
 
-    this->close();
-
+            this->close();
+        }else{
+            remove("AvailCat.txt");
+            this->open("AvailCat.txt",ios_base::out);
+            this->close();
+        }
 }
 
 
