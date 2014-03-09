@@ -12,9 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    ui->tabWidget->setTabText(0,"Clientes");
-    ui->tabWidget->setTabText(1,"Categorias");
-    ui->tabWidget->setTabText(2,"Producto");
+    ui->tableWidget_buscarCliente->setFixedHeight(55);
 }
 
 MainWindow::~MainWindow()
