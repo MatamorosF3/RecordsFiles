@@ -75,6 +75,7 @@ void MainWindow::on_pushButton_leer_clicked()
             if(sId[0] == '*') // verificamos si un archivo ha sido eliminado y asi no mostrarlo en la QTableWidget
                 continue;
 
+            ui->comboBox_IdCliente->addItem(sId);
             ui->tableWidget->insertRow(ultima_fila);
             QPointer<QCheckBox> eliminar = new QCheckBox(this);
             QPointer<QLineEdit>  id = new QLineEdit(this);
