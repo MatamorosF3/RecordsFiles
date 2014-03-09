@@ -669,7 +669,7 @@ void MainWindow::crear_nuevaFila_Productos()
 
     ui->tableWidget_productos->insertRow(ultima_fila);
     QPointer<QCheckBox> eliminar = new QCheckBox(this);
-    QPointer<QLineEdit>  id = new QLineEdit(this);
+    QPointer<QLineEdit>  id = new   QLineEdit(this);
     QPointer<QLineEdit>  nombre = new QLineEdit(this);
     QPointer<QLineEdit>  idcategoria = new QLineEdit(this);
     QPointer<QLineEdit>  precio = new QLineEdit(this);
