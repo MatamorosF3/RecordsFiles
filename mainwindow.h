@@ -55,6 +55,8 @@ private slots:
 
     void on_actionGenerar_Factura_triggered();
 
+    void on_lineEdit_buscarCliente_returnPressed();
+
 private:
     Ui::MainWindow *ui;
     ClientFile cliente;
@@ -65,6 +67,7 @@ private:
     Catfile availCategoria;
     bool leer;
     bool Peliminar;
+    LinearIndexFile indice;
 
 };
 

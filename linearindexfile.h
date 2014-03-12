@@ -1,11 +1,20 @@
 #ifndef LINEARINDEXFILE_H
 #define LINEARINDEXFILE_H
 #include "tdaindexfile.h"
+#include <vector>
+#include <QString>
 class LinearIndexFile : public TDAIndexFile
 {
 public:
+    struct indice{
+        int llave;
+        int offset;
+    };
+    int tamanioInicial;
+    vector<indice> indices;
     LinearIndexFile();
-    /*int readrecord(char*, int, QString);
+    int readrecord(QString);
+    int readrecord(char*, int);
     int writerecord(const char*,int ind);
     int findrecord(int);
     int findrecord(const char*,int);
@@ -14,6 +23,8 @@ public:
     int tell();
     int eraserecord(int);
     int updaterecord(const char*, int offset);
-    int recordsSize();*/
+    int updaterecord(QString);
+    int recordsSize();
+    int recordsSize(QString);
 };
 #endif // LINEARINDEXFILE_H

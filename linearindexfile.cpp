@@ -1,118 +1,44 @@
 #include "linearindexfile.h"
+#include <QString>
+#include <qDebug>
+#include <algorithm>
+#include <stdio.h>
 
 LinearIndexFile::LinearIndexFile()
-{
-}
-/*
-LinearIndexFile::LinearIndexFile()
-{
-    ClientFile cliente;
-    cliente.path="Clientes.txt";
-    cliente.seek(0);
+{}
+int LinearIndexFile::readrecord( char* rec, int offset){return 0;}
+int LinearIndexFile::readrecord(QString filename){
+    this->open(filename.toStdString().c_str() ,ios_base::in);
+    char buffer[12];
     int cont=0;
-    //while(!cliente.isEOF()){
-        char buffer[5];
-        cliente.read(buffer,4);
-        buffer[4]='/0';
-        indice ind;
+    while(!this->isEOF()){
+        this->seek(cont);
+        this->read(buffer,11);
+        buffer[11]='\0';
+        QString sLlave="";
+        QString sOffset="";
         for(int i=0;i<4;i++){
-            ind.llave[i]=buffer[i];
+            sLlave.append(buffer[i]);
         }
-        char* c;itoa(cont,ind.offset,10);
-        //ind.offset=itoa(cont);
-        ClientIndex.push_back(ind);
-        cont+=84;
-        cliente.seek(cont);
-    //}
-    for(int i=0;i<ClientIndex.size();i++){
-        qDebug()<<"i: " << ((indice)ClientIndex.at(i)).llave[1] <<","<<((indice)ClientIndex.at(i)).offset[1];
+        for(int i=5;i<11;i++){
+            sOffset.append(buffer[i]);
+        }
+        indice temp;
+        temp.llave=atoi(sLlave.toStdString().c_str());
+        temp.offset=atoi(sOffset.toStdString().c_str());
+        indices.push_back(temp);
+        cont+=11;
     }
-
-    TDAFile* fcli=new TDAFile("ClientesIndex.txt",ios_base::in);
-    TDAFile* fcat=new TDAFile("CategoriasIndex.txt",ios_base::in);
-    TDAFile* fprod=new TDAFile("ProductosIndex.txt",ios_base::in);
-    //Leer desde el archivo BaseClientes.txt y colocarlo en el ClientFile
-    char actual='k';//lo primero que lee es la llave
-    stringstream ssllave,ssoffset;
-    indice iActual;
-    char caracter[1];
-    while(!fcli->isEOF()){
-        fcli->read(caracter,1);
-        //cout<<caracter[0];
-        if(caracter[0]=='\n'){
-            strcpy(iActual.offset,(ssoffset.str()).c_str());
-            iActual.offset[6]='\0';
-            if(fcli->isEOF()){
-                break;
-            }else{
-                ClientIndex.push_back(iActual);
-            }
-            actual='k';
-            ssoffset.str("");
-            continue;
-        }
-        if(caracter[0]==','){//Si encuentra una coma
-            if(actual=='k'){//si estaba leyendo llave
-                strcpy(iActual.llave,(ssllave.str()).c_str());
-                iActual.llave[4]='\0';
-                actual='l';
-                ssllave.str("");
-            }
-            continue;
-        }
-        if(actual=='k'){
-            ssllave<<caracter[0];
-
-        }else if(actual=='l'){
-            ssoffset<<caracter[0];
-        }
-    }
-    fcli->close();
-    //termina de leer del archivo ClientesIndex.txt
-
-}
-int LinearIndexFile::readrecord( char* rec, int offset,QString filename){
-
-    this->open(filename,ios_base::in);
-    this->seek(offset);
-    this->read(rec,84);
     this->close();
-    if(offset == 0){
-        this->open("Avail.txt",ios_base::in | ios_base::out);
-        char entero[2];
-        string numero = "";
-        int number;
-        while(!this->isEOF()){
-            this->read(entero,1);
-            entero[1] = '\0';
-            if(entero[0] != '\n')
-                numero += entero[0];
-            else{
-                if((number = atoi(numero.c_str())) == 0)
-                    break;
-                //avail.push_back(number);
-                numero = "";
-            }
-        }
-        this->close();
-    }
-
-
     return 0;
 }
 //OJO
 int LinearIndexFile::writerecord(const char *buffer, int ind){
-    this->open("Clientes.txt",ios_base::in | ios_base::out);
-    if(ind == 1){
-        this->seek(0);
-    }
-    if(ind != 1){
-        ind--;
-        this->seek(ind*84);
-    }
-
-    this->write(buffer,84);
-    this->close();
+    indice temp;
+    temp.llave=ind;
+    ind--;
+    temp.offset=84*ind;
+    indices.push_back(temp);
     return 0;
 }
 
@@ -138,7 +64,8 @@ int LinearIndexFile::findrecord(int id){
         }
         i++;
     }
-    return idd;
+    return idd;*/
+    return 0;
 }
 
 int LinearIndexFile::findrecord(const char* rec,int ind){
@@ -163,47 +90,84 @@ int LinearIndexFile::tell(){
 }
 
 int LinearIndexFile::eraserecord(int ind){
-    //avail.push_back(ind);
-    this->open("Clientes.txt",ios_base::in | ios_base::out);
-    if(ind == 1){
-        this->seek(0);
-        // this->seek(0);
+    for(int i=0;i<indices.size();i++){
+        if(((indice)indices.at(i)).llave==ind){
+            indices.erase(indices.begin()+i);
+        }
     }
-    if(ind != 1){
-        ind--;
-        this->seek(ind*84);
-        //this->seek(ind*84);
-    }
-
-    //if(!avail.empty())
-    //qDebug() << " agrego al avail list, no esta vacia la lista";
-    char asterisco [] = "*";
-    this->write(asterisco,1);
-    this->close();
     return 0;
 }
 
-int LinearIndexFile::updaterecord(const char* rec, int ind){
-    this->open("Clientes.txt",ios_base::in | ios_base::out);
-    if(ind == 1){
-        this->seek(0);
-    }
-    if(ind != 1){
+int LinearIndexFile::updaterecord(const char* rec, int ind){return 0;}
+int LinearIndexFile::updaterecord(QString filename){
+    if(tamanioInicial!=indices.size()){
+        remove(filename.toStdString().c_str());
+        this->open(filename.toStdString().c_str(),ios_base::out);
+        int cont=0;
+        for(int i=0;i<indices.size();i++){
+            indice temp;
+            temp.llave=((indice)indices.at(i)).llave;
+            temp.offset=((indice)indices.at(i)).offset;
+            QString sLlave;
+            QString sOffset;
+            //inicio llave
+            if(temp.llave<10){
+                sLlave="000 ";
+                sLlave.replace(3,strlen(QString::number(temp.llave).toStdString().c_str()),QString::number(temp.llave));
+            }else if(temp.llave<100){
+                sLlave="00  ";
+                sLlave.replace(2,strlen(QString::number(temp.llave).toStdString().c_str()),QString::number(temp.llave));
+            }else if(temp.llave<1000){
+                sLlave="0   ";
+                sLlave.replace(1,strlen(QString::number(temp.llave).toStdString().c_str()),QString::number(temp.llave));
+            }else{
+                sLlave="    ";
+                sLlave.replace(0,strlen(QString::number(temp.llave).toStdString().c_str()),QString::number(temp.llave));
+            }
+            //fin llave
+            //inicio offset
+            if(temp.offset<10){
+                sOffset="00000 ";
+                sOffset.replace(5,strlen(QString::number(temp.offset).toStdString().c_str()),QString::number(temp.offset));
+            }else if(temp.offset<100){
+                sOffset="0000  ";
+                sOffset.replace(4,strlen(QString::number(temp.offset).toStdString().c_str()),QString::number(temp.offset));
+            }else if(temp.offset<1000){
+                sOffset="000   ";
+                sOffset.replace(3,strlen(QString::number(temp.offset).toStdString().c_str()),QString::number(temp.offset));
+            }else if(temp.offset<10000){
+                sOffset="00    ";
+                sOffset.replace(2,strlen(QString::number(temp.offset).toStdString().c_str()),QString::number(temp.offset));
+            }else if(temp.offset<100000){
+                sOffset="0     ";
+                sOffset.replace(1,strlen(QString::number(temp.offset).toStdString().c_str()),QString::number(temp.offset));
+            }else{
+                sOffset="      ";
+                sOffset.replace(0,strlen(QString::number(temp.offset).toStdString().c_str()),QString::number(temp.offset));
+            }
+            //fin offset
+            QString sInd="";
+            sInd.append(sLlave);
+            sInd.append(" ");
+            sInd.append(sOffset);
+            qDebug() << "sInd:" << sInd;
+            this->write(sInd.toStdString().c_str(),11);
+            cont+=11;
+            sInd.clear();
+        }
+        this->close();
+        qDebug() << "generar nuevo archivo";
+    }//fin if
 
-        this->seek(ind*84);
-    }
-
-    this->write(rec,84);
-    this->close();
     return 0;
 }
-
-int LinearIndexFile::recordsSize()
+int LinearIndexFile::recordsSize(){return 0;}
+int LinearIndexFile::recordsSize(QString filename)
 {
-    this->open("Clientes.txt");
+    this->open(filename.toStdString().c_str());
     this->seek(ios_base::end);
     int tel = this->tell();
     this->close();
     return tel;
 
-}*/
+}
