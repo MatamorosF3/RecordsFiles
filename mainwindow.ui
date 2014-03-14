@@ -391,7 +391,12 @@
               </column>
               <column>
                <property name="text">
-                <string>Precio</string>
+                <string>Precio por unidad</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Precio total</string>
                </property>
               </column>
              </widget>

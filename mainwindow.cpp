@@ -74,25 +74,21 @@ MainWindow::~MainWindow()
 
 
 
-void MainWindow::on_pushButton_leer_clicked()
+void MainWindow::   on_pushButton_leer_clicked()
 {
     // cliente.path = "Clientes.txt";
     producto.path= "Productos.txt";
     categoria.path= "Categories.txt";
-    int contindice=0;
 
     int cantregindice=indice.recordsSize("IndexClientes.txt");
     bool existeindice=true;
     if(cantregindice==-1){
-        qDebug() << "No existe archivo, indice en memoria por cliente";
         existeindice=false;
     }
     if(existeindice){
-        qDebug() << "lee de archivo indice";
         indice.readrecord("IndexClientes.txt");
         indice.tamanioInicial=indice.indices.size();
     }
-    qDebug() << cantregindice;
 
     if(ui->tabWidget->currentIndex() == 0 || ui->tabWidget->currentIndex() == 1 || ui->tabWidget->currentIndex() == 2){ // inicio if clientes
 
@@ -101,7 +97,6 @@ void MainWindow::on_pushButton_leer_clicked()
         int cont = 0; // contador
         char buffer [84]; // buffer para realizar la lectura del clientes
         while(cont < cantidad_registros ){
-
             cliente.readrecord(buffer,cont);
             buffer[83] = '\0'; //asignacion del null manualmente
             cont += 84; // contar incrementa de acuerdo al tamaño del registro
@@ -139,7 +134,6 @@ void MainWindow::on_pushButton_leer_clicked()
                 continue;
             //manejo de indice
             if(!existeindice){
-                qDebug() << "no existe archivo, lee de clientes";
                 int llave=atoi(sId.toStdString().c_str());
                 if(llave<1){
                     indice.indices2.insert(atoi(sId.toStdString().c_str()),0);
@@ -157,8 +151,6 @@ void MainWindow::on_pushButton_leer_clicked()
             QPointer<QLineEdit>  nombre = new QLineEdit(this);
             QPointer<QLineEdit>  correo = new QLineEdit(this);
 
-            //connect(correo,SIGNAL(returnPressed(),this,SLOT(LineEdit_guardar_enter()));
-            //int ddd=0;
             connect(correo,SIGNAL(returnPressed()),this,SLOT(LineEdit_guardar_enter()));
             QRegExp validarNumeros("^[0-9]*$");
 
@@ -191,10 +183,7 @@ void MainWindow::on_pushButton_leer_clicked()
         } //fin while
         indice.tamanioInicial=indice.indices.size();
         crear_nuevaFila(); // metodo crear nueva fila
-        qDebug() << "indice.indices.size()" << indice.indices.size();
-        for(int i = 0; i< indice.indices.size();i++){
-            qDebug() << ((LinearIndexFile::indice)indice.indices[i]).llave;
-        }
+
     } // fin if clientes
 
     if(ui->tabWidget->currentIndex() == 0 || ui->tabWidget->currentIndex() == 1 || ui->tabWidget->currentIndex() == 2){ // inicio if Categorias
@@ -204,7 +193,6 @@ void MainWindow::on_pushButton_leer_clicked()
         while(cont < si ){
 
             categoria.readrecord(buffer,cont);
-
             buffer[24] = '\0';
             cont += 24;
             QString sId;//length de 4
@@ -314,7 +302,6 @@ void MainWindow::on_pushButton_leer_clicked()
                     IdCat->setCurrentIndex(i);
                     break;
                 }
-
             } // fin for comboBox
 
 
@@ -337,8 +324,6 @@ void MainWindow::on_pushButton_leer_clicked()
             ui->tableWidget_productos->setCellWidget(ultima_fila,0,eliminar);
             ui->tableWidget_productos->setCellWidget(ultima_fila,1,id);
             ui->tableWidget_productos->setCellWidget(ultima_fila,2,nombre);
-
-            // IdCat->setCurrentIndex(ultima_fila);
             ui->tableWidget_productos->setCellWidget(ultima_fila,3,IdCat);
             ui->tableWidget_productos->setCellWidget(ultima_fila,4,precio);
 
@@ -349,24 +334,17 @@ void MainWindow::on_pushButton_leer_clicked()
             listaPrecio.append(precio);
         } //fin while
         crear_nuevaFila_Productos();
-
-
     } // fin if productos
-
-
     leer = true;
 
 }
 
 void MainWindow::on_pushButton_cerrar_clicked()
 {
-
-
     cliente.updateAvail(); // actualizamos el availList del cliente
     producto.updateAvail(); // actualizamos el availList de producto
     categoria.updateAvailCat();//actualizamos el availList de categoria
     indice.updaterecord("IndexClientes.txt");
-
     this->close(); // cerramos el programa
 }
 
@@ -374,10 +352,8 @@ void MainWindow::on_pushButton_eliminar_clicked()
 {
 
     if(ui->tabWidget->currentIndex() == 0){ // if clientes
-
         for (int i = 0;i < ui->tableWidget->rowCount(); i++){
             if(listaEliminar.at(i)->isChecked()){
-
                 cliente.eraserecord(atoi(((QLineEdit*)listaId.at(i))->text().toStdString().c_str()));
                 indice.eraserecord(atoi(((QLineEdit*)listaId.at(i))->text().toStdString().c_str()));
 
@@ -398,9 +374,6 @@ void MainWindow::on_pushButton_eliminar_clicked()
                 listaId.removeAt(i);
                 i = -1;
             }
-        }
-        for(int h=0;h<indice.indices.size();h++){
-            qDebug() << "*******" << ((LinearIndexFile::indice)indice.indices.at(h)).llave;
         }
         cliente.avail.sort(); // ordenmos el avail list de clientes
         ((QLineEdit*)listaId.at(listaId.length()-1))->setText(QString::number(cliente.avail.front())); // asignacion del nuevo id a utilizar en el QTableWidget
@@ -465,10 +438,8 @@ void MainWindow::LineEdit_guardar_enter()
     QString email = ((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()))->text(); // obtenemos el email del registro de la fila en que estemos posicionados
 
     if(index.row() == rows-1){ // inicio de if de validacion de ultima fila
-
         if(name.isEmpty() || email.isEmpty()){
             QMessageBox::critical(this,"Error","Campos Vacios");
-
         }else{
             QString id =((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-2))->text(); // obtenemos el id del registro de la fila en que estemos posicionados
             QString record; // creacion de un registro vacio para despues solomante sustituir los datos obtenidos de registro de la fila en que estemos posicionados
@@ -488,20 +459,12 @@ void MainWindow::LineEdit_guardar_enter()
                 record = "                                                                                    "; // fin
                 record.replace (0,strlen(id.toStdString().c_str()),id);
             }
-            //    QString name = ((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()-1))->text(); // obtenemos el nombre del registro de la fila que estemos posicionados
-            //   QString email = ((QLineEdit*)ui->tableWidget->cellWidget(index.row(),index.column()))->text(); // obtenemos el email del registro de la fila en que estemos posicionados
+
             record.replace(4,strlen(name.toStdString().c_str()),name); // ingresamos el nombre al registro nuevo
             record.replace(43,strlen(email.toStdString().c_str()),email); // ingresamos el email al registro nuevo
-            //LinearIndexFile::indice temp;
-            //temp.llave=atoi(id.toStdString().c_str());
-            //temp.offset=(atoi(id.toStdString().c_str())-1)*84;
             indice.indices2.insert(atoi(id.toStdString().c_str()),(atoi(id.toStdString().c_str())-1)*84);
-            qDebug() << "inserto en mapa:";
-            //indice.indices.push_back(temp);
-
             cliente.writerecord(record.toStdString().c_str(),(((QLineEdit*)ui->tableWidget->cellWidget(index.row(),1))->text().toInt())); // mandamos a guardar al archivo el nuevo registro
             ui->statusBar->showMessage("Registro Guardado",2000);
-
             crear_nuevaFila(); // creacion de una nueva fila
         }
     }else{
@@ -575,7 +538,6 @@ void MainWindow::LineEdit_guardar_enter_Categorias()
     }else{//SI ESTA MODIFICANDO
         if(((QLineEdit*)listaNombreCate.at(index.row()))->text().isEmpty() || ((QLineEdit*)listaIdCate.at(index.row()))->text().isEmpty()){
             QMessageBox::critical(this,"Error","Campos Vacios");
-
         }else{
             QString registro="                        ";
             QString id=((QLineEdit*)ui->tableWidget_categorias->cellWidget(index.row(),index.column()-1))->text();
@@ -587,13 +549,11 @@ void MainWindow::LineEdit_guardar_enter_Categorias()
 }
 void MainWindow::LineEdit_guardar_enter_Productos()
 {
-
     int rows = ui->tableWidget_productos->rowCount();
     QWidget *widget = QApplication::focusWidget();
     QModelIndex index = ui->tableWidget_productos->indexAt(widget->pos());
 
     if(index.row() == rows-1){
-        //|| ((QLineEdit*)listaIdCategoriaProd.at(index.row()))->text().isEmpty()
         if(((QLineEdit*)listaNombreProd.at(index.row()))->text().isEmpty()  || ((QLineEdit*)listaPrecio.at(index.row()))->text().isEmpty()){
             QMessageBox::critical(this,"Error","Campos Vacios");
         }else{
@@ -623,13 +583,11 @@ void MainWindow::LineEdit_guardar_enter_Productos()
             crear_nuevaFila_Productos();
         }
     }else{//SI ESTA MODIFICANDO
-        //  ((QLineEdit*)listaIdCategoriaProd.at(index.row()))->text().isEmpty()||
         if(((QLineEdit*)listaNombreProd.at(index.row()))->text().isEmpty() ||  ((QLineEdit*)listaPrecio.at(index.row()))->text().isEmpty()){
             QMessageBox::critical(this,"Error","Campos Vacios");
 
         }else{
             QString id=((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-3))->text();
-
             QString registro = "                                     "; // fin
             registro.replace(0,strlen(id.toStdString().c_str()),id);
             registro.replace(4,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-2))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-2))->text());
@@ -648,14 +606,11 @@ void MainWindow::crear_nuevaFila()
     QPointer<QLineEdit>  id = new QLineEdit(this);
     QPointer<QLineEdit>  nombre = new QLineEdit(this);
     QPointer<QLineEdit>  correo = new QLineEdit(this);
-
-
     QRegExp validarNumeros("^[0-9]*$");
 
     id->setMaxLength(4);
     id->setValidator(new QRegExpValidator(validarNumeros, this));
     id->setEnabled(false);
-    QString nuevo;
     if(!cliente.avail.empty()){ // verificamos si hay espacio disponible en el avial list
         if(leer){
             leer = false;
@@ -709,8 +664,6 @@ void MainWindow::crear_nuevaFila()
 void MainWindow::crear_nuevaFila_Categorias()
 {
     const int ultima_fila =  ui->tableWidget_categorias->rowCount();
-    int fila = ui->tableWidget_categorias->rowCount();
-
     ui->tableWidget_categorias->insertRow(ultima_fila);
     QPointer<QCheckBox> eliminar = new QCheckBox(this);
     QPointer<QLineEdit>  id = new QLineEdit(this);
@@ -729,7 +682,6 @@ void MainWindow::crear_nuevaFila_Categorias()
                     id->setText(QString::number(categoria.AvailCat.front()));
                 else
                     id->setText(QString::number(ui->tableWidget_categorias->rowCount()));
-
             }
             else{
                 if(categoria.AvailCat.empty()){
@@ -746,14 +698,12 @@ void MainWindow::crear_nuevaFila_Categorias()
                     categoria.AvailCat.sort();
                     id->setText(QString::number(categoria.AvailCat.front()));
                 }else{
-
                     id->setText(QString::number(ui->tableWidget_categorias->rowCount()));
                 }
             }
         }
 
     }else{
-
         id->setText(QString::number(ui->tableWidget_categorias->rowCount()));
     }
     id->setMaxLength(4);
@@ -774,8 +724,6 @@ void MainWindow::crear_nuevaFila_Categorias()
 void MainWindow::crear_nuevaFila_Productos()
 {
     const int ultima_fila =  ui->tableWidget_productos->rowCount();
-    int fila = ui->tableWidget_productos->rowCount();
-
     ui->tableWidget_productos->insertRow(ultima_fila);
     QPointer<QCheckBox> eliminar = new QCheckBox(this);
     QPointer<QLineEdit>  id = new   QLineEdit(this);
@@ -793,7 +741,6 @@ void MainWindow::crear_nuevaFila_Productos()
     id->setMaxLength(4);
     id->setValidator(new QRegExpValidator(validarNumeros, this));
     id->setEnabled(false);
-    QString nuevo;
     if(!producto.avail.empty()){ // verificamos si hay espacio disponible en el avial list
         if(leer){
             leer = false;
@@ -803,7 +750,6 @@ void MainWindow::crear_nuevaFila_Productos()
                     id->setText(QString::number(producto.avail.front()));
                 else
                     id->setText(QString::number(ui->tableWidget_productos->rowCount()));
-
             }
             else{
                 if(producto.avail.empty()){
@@ -820,14 +766,12 @@ void MainWindow::crear_nuevaFila_Productos()
                     producto.avail.sort();
                     id->setText(QString::number(producto.avail.front()));
                 }else{
-
                     id->setText(QString::number(ui->tableWidget_productos->rowCount()));
                 }
             }
         }
 
     }else{
-
         id->setText(QString::number(ui->tableWidget_productos->rowCount()));
     }
     id->setMaxLength(4);
@@ -865,9 +809,6 @@ void MainWindow::on_actionNew_triggered()
 void MainWindow::on_actionOpen_triggered()
 {
     QString path = QFileDialog::getOpenFileName(this, tr("Open File"), QDir::homePath(), tr("Text File (*.txt)"));
-    //if(path.endsWith("Cliente.txt")){
-    //  cliente.path = path;
-    //}
     cliente.path = path;
     on_pushButton_leer_clicked();
 
@@ -898,7 +839,6 @@ void MainWindow::on_actionGenerar_Factura_triggered()
             }
             for(int m=8;m<21;m++){//horas
                 for(int n=0;n<60;n+=((rand()%15)+1)){//minutos
-                    //sGen+=sMeses[j]+" "+k+" "+sEncabezado[l]+" "+m+":"+n;
                     sGen.append(sMeses[j]);
                     if(k<10){
                         sGen.append("0");
@@ -914,7 +854,6 @@ void MainWindow::on_actionGenerar_Factura_triggered()
                         sGen.append("0");
                     }
                     sGen.append(QString::number(n));
-
                     cont++;
                     randcli=(rand()%cts)+1;
                     if(randcli<10){ // verificamos si id es solamente de 1 digito.
@@ -961,14 +900,9 @@ void MainWindow::on_actionGenerar_Factura_triggered()
                     cabecera.replace(0,strlen(idfact.toStdString().c_str()),idfact);
                     cabecera.replace(6,strlen(sGen.toStdString().c_str()),sGen);
                     cabecera.replace(20,strlen(idcli.toStdString().c_str()),idcli);
-                    /*cabecera.append(sGen);
-                    cabecera.append(" ");
-                    cabecera.append(idcli);*/
-                    const char * cad=cabecera.toStdString().c_str();
                     headFact.write(cabecera.toStdString().c_str(),25);
                     idcli.clear();
                     cabecera.clear();
-
 
                     for(int h=0;h<((rand()%10)+1);h++){
                         int randprod=(rand()%prods)+1;
@@ -1005,7 +939,6 @@ void MainWindow::on_actionGenerar_Factura_triggered()
             }
             l++;
         }
-
     }
     headFact.close();
     DetailFact.close();
@@ -1016,7 +949,6 @@ void MainWindow::on_lineEdit_buscarCliente_returnPressed()
 {
     int iDBuscar =atoi(ui->lineEdit_buscarCliente->text().toStdString().c_str());
 
-    qDebug() << "indice size" << indice.indices2.size();
     if(!indice.indices2.contains(iDBuscar)){
         QMessageBox::critical(this,"Error","Cliente no encontrado");
 
@@ -1100,20 +1032,14 @@ void MainWindow::on_comboBox_IdCliente_currentIndexChanged(const QString &arg1)
     QString sIdCliente;
     QString sDate;
     QString sIdFactura;
-    //QMap <int,QString> head;
-    qDebug() << headerSize;
-
+    ui->comboBox_IdFactura->clear();
     while(c < headerSize){
         header.readrecord(buffer2,c);
         buffer2[25] = '\0';
         c+=25;
 
-        qDebug() << buffer2 << " buffer2";
         for(int i = 21; i < 25; i++)
             sIdCliente += buffer2[i];
-        qDebug() << "Id Cliente: " << atoi(sIdCliente.toStdString().c_str());
-        qDebug() << "arg1: " <<atoi(arg1.toStdString().c_str());
-
 
         if(atoi(sIdCliente.toStdString().c_str()) == atoi(arg1.toStdString().c_str())){
             for(int i =0;i < 19;i++){
@@ -1121,40 +1047,14 @@ void MainWindow::on_comboBox_IdCliente_currentIndexChanged(const QString &arg1)
                     sDate+= buffer2[i];
                 }else{
                     sIdFactura+= buffer2[i];
-
                 }
-
-
             }
-
-            qDebug() << "Factura: " << sIdFactura;
-            qDebug() << "Date: " << sDate;
             head.insert(head.size(),sDate);
             ui->comboBox_IdFactura->addItem(QString::number(atoi(sIdFactura.toStdString().c_str())));
-            qDebug() << "inserto";
         }
         sIdCliente.clear();
         sIdFactura.clear();
         sDate.clear();
-
-        /*   for(int i = 4; i < 44;i++){
-            if(i != 43){
-                if(buffer[i] == ' ' && buffer[i+1] == ' ')
-                    break;
-                else
-                    sNombre += buffer[i];
-            }
-        }
-
-        for(int i = 43; i < 84; i++){
-            if(i != 83){
-                if(buffer[i] == ' ' && buffer[i+1] == ' ')
-                    break;
-                else
-                    sCorreo += buffer[i];
-            }
-        }
-        */
     } // fin while
 }
 
@@ -1171,13 +1071,14 @@ void MainWindow::on_comboBox_IdFactura_currentIndexChanged(int index)
     QString sIdProducto;
     QString sCantidad;
     bool f = false;
-    bool f2 = false;
-    qDebug() << "DETALLES: ";
+    for(int i = 0; i < ui->tableWidget_consulta->rowCount();i++){
+        ui->tableWidget_consulta->removeRow(i);
+        i = -1;
+    }
     while(c < detailSize){
         detail.readrecord(buffer,c);
         buffer[12] = '\0';
         c+=12;
-        //qDebug() << "Buffer: " << buffer;
         for(int i = 0; i <13;i++){
             if(i < 5)
                 sIdFactura += buffer[i];
@@ -1192,83 +1093,59 @@ void MainWindow::on_comboBox_IdFactura_currentIndexChanged(int index)
 
         }
         if(atoi(sIdFactura.toStdString().c_str()) == atoi(ui->comboBox_IdFactura->currentText().toStdString().c_str())){
-            qDebug() << "factura: " << sIdFactura;
-            qDebug() << "producto: " << sIdProducto;
-            qDebug() << "cantidad: " << sCantidad;
+
             f = true;
             const int ultima_fila =  ui->tableWidget_consulta->rowCount();
 
             ui->tableWidget_consulta->insertRow(ultima_fila);
-            QPointer<QCheckBox> eliminar = new QCheckBox(this);
-            QPointer<QLineEdit>  id = new QLineEdit(this);
-            QPointer<QLineEdit>  nombre = new QLineEdit(this);
-            QPointer<QLineEdit>  correo = new QLineEdit(this);
-
-
-            QRegExp validarNumeros("^[0-9]*$");
-
-            id->setMaxLength(4);
-            id->setValidator(new QRegExpValidator(validarNumeros, this));
-            id->setEnabled(false);
-        }
-        if(f){
-            if(atoi(sIdFactura.toStdString().c_str()) != atoi(ui->comboBox_IdFactura->currentText().toStdString().c_str())){
-
-                f2 = true;
+            char buffer2[37];
+            producto.findrecord(buffer2,atoi(sIdProducto.toStdString().c_str()));
+            buffer2[36] = '\0';
+            QString sNombre;//length de 19
+            QString sPrecio;//length de 9
+            for(int i = 4; i < 23;i++){
+                if(i != 23){
+                    if(buffer2[i] == ' ' && buffer2[i+1] == ' ')
+                        break;
+                    else{
+                        sNombre += buffer2[i];
+                    }
+                }
             }
+
+            for(int i = 27; i < 36; i++){
+                if(i != 36){
+                    if(buffer2[i] == ' ' && buffer2[i+1] == ' ')
+                        break;
+                    else{
+                        sPrecio += buffer2[i];
+                    }
+                }
+            }
+            QPointer<QLineEdit>  producto = new QLineEdit(this);
+            QPointer<QLineEdit>  precioUnidad = new QLineEdit(this);
+            QPointer<QLineEdit>  cantidad = new QLineEdit(this);
+            QPointer<QLineEdit>  precioTotal = new QLineEdit(this);
+
+            producto->setText(sNombre);
+            cantidad->setText(sCantidad);
+            precioUnidad->setText(sPrecio);
+            ui->tableWidget_consulta->setCellWidget(ultima_fila,0,producto); // producto
+            ui->tableWidget_consulta->setCellWidget(ultima_fila,1,cantidad); // catidad
+            double precio2 = sPrecio.toDouble();
+            ui->tableWidget_consulta->setCellWidget(ultima_fila,2,precioUnidad); // precio por unidad
+            double total = precio2 * atoi(sCantidad.toStdString().c_str());
+            precioTotal->setText(QString::number(total));
+            ui->tableWidget_consulta->setCellWidget(ultima_fila,3,precioTotal); // precio total
+
+        }
+        if(f && atoi(sIdFactura.toStdString().c_str()) != atoi(ui->comboBox_IdFactura->currentText().toStdString().c_str() )){
+            qDebug() << "hizo break;";
+            break;
         }
         sIdFactura.clear();
         sIdProducto.clear();
         sCantidad.clear();
-        if(!f2) // break para no recorrer todo el archivo
-            break;
+
     } // fin while de recorrer archivo
-
-
-
-    /*z
-    const int si  =producto.recordsSize();
-    int cont = 0;
-    char buffer [37];
-    while(cont < si ){
-
-        producto.readrecord(buffer,cont);
-        buffer[36] = '\0';
-        cont += 36;
-        QString sId;//length de 4
-        QString sNombre;//length de 19
-        QString sCategoria;//length de 4
-        QString sPrecio;//length de 9
-        for(int i = 0; i < 4; i++){
-            sId += buffer[i];
-        }
-        for(int i = 4; i < 23;i++){
-            if(i != 23){
-                if(buffer[i] == ' ' && buffer[i+1] == ' ')
-                    break;
-                else{
-                    sNombre += buffer[i];
-                }
-            }
-        }
-        for(int i = 23; i < 27; i++){
-            if(i != 27){
-                if(buffer[i] == ' ' && buffer[i+1] == ' ')
-                    break;
-                else{
-                    sCategoria += buffer[i];\
-                }
-            }
-        }
-        for(int i = 27; i < 36; i++){
-            if(i != 36){
-                if(buffer[i] == ' ' && buffer[i+1] == ' ')
-                    break;
-                else{
-                    sPrecio += buffer[i];
-                }
-            }
-        }
-    } // fin while
-*/
 }

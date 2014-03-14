@@ -78,6 +78,15 @@ int ProductFile::findrecord(int id){
 }
 
 int ProductFile::findrecord(char* rec,int ind){
+    this->open(path.toStdString().c_str(),ios_base::in);
+    if(ind<1){
+        this->seek(ind);
+    }else{
+        ind--;
+        this->seek(ind*36);
+    }
+    this->read(rec,36);
+    this->close();
 
     return 0;
 }
