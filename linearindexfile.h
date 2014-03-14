@@ -3,21 +3,28 @@
 #include "tdaindexfile.h"
 #include <vector>
 #include <QString>
+#include <list>
+#include <QMap>
 class LinearIndexFile : public TDAIndexFile
 {
 public:
     struct indice{
         int llave;
         int offset;
+
+        ~indice(){
+
+        };
     };
     int tamanioInicial;
     vector<indice> indices;
+    QMap<int,int> indices2;
     LinearIndexFile();
     int readrecord(QString);
     int readrecord(char*, int);
     int writerecord(const char*,int ind);
     int findrecord(int);
-    int findrecord(const char*,int);
+    int findrecord(char*,int);
     void seek(int);
     void seek(ios::seekdir mode=ios::beg);
     int tell();

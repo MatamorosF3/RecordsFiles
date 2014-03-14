@@ -1,21 +1,14 @@
-#include "clientfile.h"
-#include <cstring>
-#include <string>
-#include <sstream>
-#include <iostream>
-#include <QDebug>
-#include <stdio.h>
-ClientFile::ClientFile()
-{
+#include "headerfile.h"
 
+headerfile::headerfile()
+{
 }
 
-
-int ClientFile::readrecord( char* rec, int offset){
+int headerfile::readrecord( char* rec, int offset){
 
     this->open(path.toStdString().c_str(),ios_base::in);
     this->seek(offset);
-    this->read(rec,84);
+    this->read(rec,25);
 
     // otra forma de leer los archivos
     /*this->read((char*)&cliente,84);
@@ -23,50 +16,26 @@ int ClientFile::readrecord( char* rec, int offset){
     cliente.correo[38] = '\0';
     cliente.nombre[38] = '\0';
     */
-
-
     this->close();
-
-    if(offset == 0){
-        this->open("Avail.txt",ios_base::in | ios_base::out);
-        char entero[2];
-        string numero = "";
-        int number;
-        while(!this->isEOF()){
-            this->read(entero,1);
-            entero[1] = '\0';
-            if(entero[0] != '\n')
-                numero += entero[0];
-            else{
-                if((number = atoi(numero.c_str())) == 0)
-                    break;
-                avail.push_back(number);
-                numero = "";
-            }
-        }
-        this->close();
-    }
-
-
     return 0;
 }
 //OJO
-int ClientFile::writerecord(const char *buffer, int ind){
+int headerfile::writerecord(const char *buffer, int ind){
     this->open(path.toStdString().c_str(),ios_base::in | ios_base::out);
     if(ind == 1){
         this->seek(0);
     }
     if(ind != 1){
         ind--;
-        this->seek(ind*84);
+        this->seek(ind*24);
     }
 
-    this->write(buffer,84);
+    this->write(buffer,24);
     this->close();
     return 0;
 }
 
-int ClientFile::findrecord(int id){
+int headerfile::findrecord(int id){
     /*TDAFile f;
     f.open("clientes.txt",ios::in);
     int i=0,idd=-1;
@@ -92,7 +61,7 @@ int ClientFile::findrecord(int id){
     return 0;
 }
 
-int ClientFile::findrecord(char* rec,int ind){
+int headerfile::findrecord(char* rec,int ind){
 
     this->open(path.toStdString().c_str(),ios_base::in);
      if(ind<1){
@@ -106,24 +75,24 @@ int ClientFile::findrecord(char* rec,int ind){
     return 0;
 }
 
-void ClientFile::seek(int ind){
+void headerfile::seek(int ind){
     TDAFile::seek(ind);
 
 }
 
-void ClientFile::seek(ios::seekdir mode)
+void headerfile::seek(ios::seekdir mode)
 {
     TDAFile::seek(mode);
 }
 
-int ClientFile::tell(){
+int headerfile::tell(){
 
     return TDAFile::tell();
 
 }
 
-int ClientFile::eraserecord(int ind){
-    avail.push_back(ind);
+int headerfile::eraserecord(int ind){
+    //avail.push_back(ind);
     this->open(path.toStdString().c_str(),ios_base::in | ios_base::out);
     if(ind == 1){
         this->seek(0);
@@ -139,7 +108,7 @@ int ClientFile::eraserecord(int ind){
     return 0;
 }
 
-int ClientFile::updaterecord(const char* rec, int ind){
+int headerfile::updaterecord(const char* rec, int ind){
     this->open(path.toStdString().c_str(),ios_base::in | ios_base::out);
     if(ind == 1){
         this->seek(0);
@@ -154,7 +123,7 @@ int ClientFile::updaterecord(const char* rec, int ind){
     return 0;
 }
 
-int ClientFile::recordsSize()
+int headerfile::recordsSize()
 {
     this->open(path.toStdString().c_str());
     this->seek(ios_base::end);
@@ -164,25 +133,7 @@ int ClientFile::recordsSize()
 
 }
 
-int ClientFile::updateAvail()
-{
-    if(!avail.empty()){
-        this->open("Avail.txt",ios_base::out);
-
-        for (std::list<int>::iterator it=avail.begin() ; it != avail.end(); ++it){
-            char ft[ (strlen(QString::number(*it).toStdString().c_str())) +2];
-            ft[sizeof(ft) -1] = '\0';
-            strcpy(ft,QString::number(*it).toStdString().c_str());
-            ft[sizeof(ft) - 2] = '\n';
-            this->write(ft,(sizeof(ft)) - 1);
-        }
-
-        this->close();
-    }else{
-        remove("Avail.txt");
-        this->open("Avail.txt",ios_base::out);
-        this->close();
-    }
 
 
-}
+
+

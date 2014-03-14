@@ -77,7 +77,7 @@ int ProductFile::findrecord(int id){
     return idd;*/
 }
 
-int ProductFile::findrecord(const char* rec,int ind){
+int ProductFile::findrecord(char* rec,int ind){
 
     return 0;
 }
