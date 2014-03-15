@@ -3,6 +3,7 @@
 #include "tdafsrecordfile.h"
 #include "linearindexfile.h"
 #include <QString>
+
 #include <list>
 class ClientFile : public TDAFSRecordFile{
 
@@ -17,7 +18,7 @@ public:
     int readrecord(char*,int);
     int writerecord(const char*,int ind);
     int findrecord(int);
-    int findrecord(const char*,int);
+    int findrecord(char*,int);
     void seek(int);
     void seek(ios::seekdir mode=ios::beg);
     int tell();

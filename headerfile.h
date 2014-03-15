@@ -1,11 +1,12 @@
-#ifndef PRODUCTFILE_H
-#define PRODUCTFILE_H
+#ifndef HEADERFILE_H
+#define HEADERFILE_H
 #include "tdafsrecordfile.h"
 #include <QString>
-#include <list>
-class ProductFile : public TDAFSRecordFile{
+
+class headerfile: public TDAFSRecordFile
+{
 public:
-    ProductFile();
+    headerfile();
     int readrecord(char*,int);
     int writerecord(const char*,int ind);
     int findrecord(int);
@@ -16,10 +17,7 @@ public:
     int eraserecord(int);
     int updaterecord(const char*, int offset);
     int recordsSize();
-    int updateAvail();
-
     QString path;
-    list <int> avail;
 };
 
-#endif // PRODUCTFILE_H
+#endif // HEADERFILE_H

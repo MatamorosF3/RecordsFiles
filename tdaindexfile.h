@@ -9,7 +9,7 @@ public:
     virtual int readrecord(char*,int)=0;
     virtual int writerecord(const char*,int ind)=0;
     virtual int findrecord(int)=0;
-    virtual int findrecord(const char*,int)=0;
+    virtual int findrecord(char*,int)=0;
     virtual void seek(int)=0;
     virtual void seek(ios::seekdir mode=ios::beg)=0;
     virtual int tell()=0;

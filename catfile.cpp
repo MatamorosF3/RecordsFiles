@@ -78,7 +78,7 @@ int Catfile::findrecord(int id){
     return idd;*/
 }
 
-int Catfile::findrecord(const char* rec,int ind){
+int Catfile::findrecord(char* rec,int ind){
 
     return 0;
 }

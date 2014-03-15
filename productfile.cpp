@@ -77,7 +77,16 @@ int ProductFile::findrecord(int id){
     return idd;*/
 }
 
-int ProductFile::findrecord(const char* rec,int ind){
+int ProductFile::findrecord(char* rec,int ind){
+    this->open(path.toStdString().c_str(),ios_base::in);
+    if(ind<1){
+        this->seek(ind);
+    }else{
+        ind--;
+        this->seek(ind*36);
+    }
+    this->read(rec,36);
+    this->close();
 
     return 0;
 }

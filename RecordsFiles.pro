@@ -10,6 +10,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = RecordsFiles
 TEMPLATE = app
+qt += c++11
 
 
 SOURCES += main.cpp\
@@ -21,7 +22,9 @@ SOURCES += main.cpp\
     catfile.cpp \
     linearindexfile.cpp \
     productfile.cpp \
-    tdaindexfile.cpp
+    tdaindexfile.cpp \
+    headerfile.cpp \
+    detailfile.cpp
 
 HEADERS  += mainwindow.h \
     clientfile.h \
@@ -31,6 +34,8 @@ HEADERS  += mainwindow.h \
     catfile.h \
     linearindexfile.h \
     productfile.h \
-    tdaindexfile.h
+    tdaindexfile.h \
+    headerfile.h \
+    detailfile.h
 
 FORMS    += mainwindow.ui
