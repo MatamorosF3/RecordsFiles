@@ -13,7 +13,6 @@ int LinearIndexFile::readrecord(QString filename){
     this->open(filename.toStdString().c_str() ,ios_base::in);
     char buffer[12];
     int cont=0;
-    qDebug() << "c" << c;
     while(cont < c){
         this->seek(cont);
         this->read(buffer,11);
@@ -30,38 +29,15 @@ int LinearIndexFile::readrecord(QString filename){
         indices2.insert(atoi(sLlave.toStdString().c_str()),atoi(sOffset.toStdString().c_str()));
         cont+=11;
     }
-    /*while(!this->isEOF()){
-        this->seek(cont);
-        this->read(buffer,11);
-        buffer[11]='\0';
-        QString sLlave="";
-        QString sOffset="";
-        for(int i=0;i<4;i++){
-            sLlave.append(buffer[i]);
-        }
-        for(int i=5;i<11;i++){
-            sOffset.append(buffer[i]);
-        }
-        indice temp;
-        temp.llave=atoi(sLlave.toStdString().c_str());
-        temp.offset=atoi(sOffset.toStdString().c_str());
-        indices.push_back(temp);
-        cont+=11;
-        c++;
-    }
-    */
-
-    qDebug() << "Cuantas veces lee:" << c;
     this->close();
     return 0;
 }
 //OJO
 int LinearIndexFile::writerecord(const char *buffer, int ind){
-    indice temp;
-    temp.llave=ind;
-    ind--;
-    temp.offset=84*ind;
-    indices.push_back(temp);
+    int key = ind;
+    if(ind < 1)
+        ind--;
+    // indices2.insert(key,84*ind);
     return 0;
 }
 
@@ -113,23 +89,8 @@ int LinearIndexFile::tell(){
 }
 
 int LinearIndexFile::eraserecord(int ind){
-    qDebug() << "Indice a eliminar: " << ind;
-    qDebug() << "Tamaño de vector: " << indices.size();
-    for(int i=0;i<indices.size();i++){
-        qDebug() << ((indice)indices[i]).llave;
-    }
-    for(unsigned i=0;i<indices.size();i++){
-        if(((indice)indices[i]).llave==ind){
-            indices.erase(indices.begin()+(i));
 
-        }
-    }
-
-    qDebug() << "Tamaño de vector despues de eliminar " << indices.size();
-    for(int i=0;i<indices.size();i++){
-        qDebug() << ((indice)indices[i]).llave;
-    }
-
+    indices2.remove(ind);
     return 0;
 }
 

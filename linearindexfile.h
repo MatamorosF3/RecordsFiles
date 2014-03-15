@@ -8,16 +8,8 @@
 class LinearIndexFile : public TDAIndexFile
 {
 public:
-    struct indice{
-        int llave;
-        int offset;
-
-        ~indice(){
-
-        };
-    };
     int tamanioInicial;
-    vector<indice> indices;
+    //vector<indice> indices;
     QMap<int,int> indices2;
     LinearIndexFile();
     int readrecord(QString);

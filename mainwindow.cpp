@@ -74,11 +74,11 @@ MainWindow::~MainWindow()
 
 
 
-void MainWindow::   on_pushButton_leer_clicked()
+void MainWindow::on_pushButton_leer_clicked()
 {
     // cliente.path = "Clientes.txt";
     producto.path= "Productos.txt";
-    categoria.path= "Categories.txt";
+    categoria.path= "Categories.txts";
 
     int cantregindice=indice.recordsSize("IndexClientes.txt");
     bool existeindice=true;
@@ -87,7 +87,7 @@ void MainWindow::   on_pushButton_leer_clicked()
     }
     if(existeindice){
         indice.readrecord("IndexClientes.txt");
-        indice.tamanioInicial=indice.indices.size();
+        indice.tamanioInicial=indice.indices2.size();
     }
 
     if(ui->tabWidget->currentIndex() == 0 || ui->tabWidget->currentIndex() == 1 || ui->tabWidget->currentIndex() == 2){ // inicio if clientes
@@ -134,6 +134,7 @@ void MainWindow::   on_pushButton_leer_clicked()
                 continue;
             //manejo de indice
             if(!existeindice){
+                qDebug() << "No existe:";
                 int llave=atoi(sId.toStdString().c_str());
                 if(llave<1){
                     indice.indices2.insert(atoi(sId.toStdString().c_str()),0);
@@ -181,7 +182,7 @@ void MainWindow::   on_pushButton_leer_clicked()
              */
 
         } //fin while
-        indice.tamanioInicial=indice.indices.size();
+        indice.tamanioInicial=indice.indices2.size();
         crear_nuevaFila(); // metodo crear nueva fila
 
     } // fin if clientes
@@ -1018,7 +1019,7 @@ void MainWindow::on_lineEdit_buscarCliente_returnPressed()
 void MainWindow::probarEliminar()
 {
 
-    delete ((QLineEdit*)ui->tableWidget->cellWidget(0,0)); // obtenemos el email del registro de la fila en que estemos posicionados
+   // delete ((QLineEdit*)ui->tableWidget->cellWidget(0,1)); // obtenemos el email del registro de la fila en que estemos posicionados
 
 
 }
