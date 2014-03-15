@@ -146,13 +146,11 @@ int LinearIndexFile::updaterecord(QString filename){
             sInd.append(sLlave);
             sInd.append(" ");
             sInd.append(sOffset);
-            qDebug() << "sInd:" << sInd;
             this->write(sInd.toStdString().c_str(),11);
             cont+=11;
             sInd.clear();
         } // fin for
         this->close();
-        qDebug() << "generar nuevo archivo";
     }//fin if para volver a generar archivo de indice
 
     return 0;
