@@ -24,7 +24,9 @@ SOURCES += main.cpp\
     productfile.cpp \
     tdaindexfile.cpp \
     headerfile.cpp \
-    detailfile.cpp
+    detailfile.cpp \
+    arbolbnodo.cpp \
+    arbolb.cpp
 
 HEADERS  += mainwindow.h \
     clientfile.h \
@@ -36,6 +38,8 @@ HEADERS  += mainwindow.h \
     productfile.h \
     tdaindexfile.h \
     headerfile.h \
-    detailfile.h
+    detailfile.h \
+    arbolbnodo.h \
+    arbolb.h
 
 FORMS    += mainwindow.ui

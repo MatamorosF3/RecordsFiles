@@ -4,6 +4,8 @@
 #include "clientfile.h"
 #include "tdaindexfile.h"
 #include "tdafile.h"
+#include "arbolb.h"
+#include "arbolbnodo.h"
 #include <QMessageBox>
 #include <QFileDialog>
 #include <list>
@@ -1156,7 +1158,7 @@ void MainWindow::on_comboBox_IdFactura_currentIndexChanged(int index)
 
         }
         if(f && atoi(sIdFactura.toStdString().c_str()) != atoi(ui->comboBox_IdFactura->currentText().toStdString().c_str() )){
-            qDebug() << "hizo break;";
+            //qDebug() << "hizo break;";
             break;
         }
         sIdFactura.clear();
@@ -1166,3 +1168,14 @@ void MainWindow::on_comboBox_IdFactura_currentIndexChanged(int index)
     } // fin while de recorrer archivo
 }
 
+
+void MainWindow::on_comboBox_metodoDeBusquedad_currentIndexChanged(int index)
+{
+    if(index==1){
+        ArbolB arbolito(15);
+        arbolito.insertar(5);
+
+
+
+    }
+}

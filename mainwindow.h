@@ -60,6 +60,8 @@ private slots:
 
     void on_comboBox_IdFactura_currentIndexChanged(int index);
     void probarEliminar();
+    void on_comboBox_metodoDeBusquedad_currentIndexChanged(int index);
+
 private:
     Ui::MainWindow *ui;
     ClientFile cliente;

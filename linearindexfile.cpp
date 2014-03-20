@@ -1,6 +1,6 @@
 #include "linearindexfile.h"
 #include <QString>
-#include <qDebug>
+#include <QDebug>
 #include <algorithm>
 #include <stdio.h>
 
