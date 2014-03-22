@@ -43,3 +43,6 @@ HEADERS  += mainwindow.h \
     arbolb.h
 
 FORMS    += mainwindow.ui
+
+RESOURCES += \
+    recursos.qrc
