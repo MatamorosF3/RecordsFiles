@@ -42,6 +42,13 @@
       </item>
      </layout>
     </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="label_3">
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+     </widget>
+    </item>
     <item row="2" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="styleSheet">
@@ -173,48 +180,26 @@
         <string>Consultas</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_8">
-        <item row="0" column="0">
-         <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item row="2" column="0">
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
           <item>
-           <widget class="QLabel" name="label_2">
-            <property name="text">
-             <string>Id Cliente</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="comboBox_IdCliente"/>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_3">
+           <spacer name="horizontalSpacer_4">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
-              <width>58</width>
+              <width>40</width>
               <height>20</height>
              </size>
             </property>
            </spacer>
           </item>
           <item>
-           <widget class="QComboBox" name="comboBox_metodoDeBusquedad">
-            <item>
-             <property name="text">
-              <string>Indice Simple</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Arbol B</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Indice loco</string>
-             </property>
-            </item>
+           <widget class="QPushButton" name="pushButton">
+            <property name="text">
+             <string>Generar consulta</string>
+            </property>
            </widget>
           </item>
          </layout>
@@ -367,26 +352,48 @@
           </item>
          </layout>
         </item>
-        <item row="2" column="0">
-         <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item row="0" column="0">
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
           <item>
-           <spacer name="horizontalSpacer_4">
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>Id Cliente</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboBox_IdCliente"/>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_3">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
-              <width>40</width>
+              <width>58</width>
               <height>20</height>
              </size>
             </property>
            </spacer>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton">
-            <property name="text">
-             <string>Generar consulta</string>
-            </property>
+           <widget class="QComboBox" name="comboBox_metodoDeBusquedad">
+            <item>
+             <property name="text">
+              <string>Indice Simple</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Arbol B</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Indice loco</string>
+             </property>
+            </item>
            </widget>
           </item>
          </layout>
@@ -406,23 +413,6 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_eliminar">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset resource="recursos.qrc">
-          <normaloff>:/1395377070_DeleteRed.png</normaloff>:/1395377070_DeleteRed.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>35</width>
-          <height>25</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -435,21 +425,7 @@
         </property>
        </spacer>
       </item>
-      <item>
-       <widget class="QPushButton" name="pushButton_cerrar">
-        <property name="text">
-         <string>Cerrar</string>
-        </property>
-       </widget>
-      </item>
      </layout>
-    </item>
-    <item row="1" column="0">
-     <widget class="QLabel" name="label_3">
-      <property name="text">
-       <string>TextLabel</string>
-      </property>
-     </widget>
     </item>
    </layout>
   </widget>
@@ -469,18 +445,28 @@
     <addaction name="actionOpen"/>
     <addaction name="actionNew"/>
     <addaction name="actionGenerar_Factura"/>
+    <addaction name="actionClose"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="actionDelete_Record"/>
    </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
   </widget>
+  <widget class="QStatusBar" name="statusBar"/>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
+    <enum>RightToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionClose"/>
+   <addaction name="actionDelete_Record"/>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
   <action name="actionOpen">
    <property name="text">
     <string>Open</string>
@@ -494,6 +480,24 @@
   <action name="actionGenerar_Factura">
    <property name="text">
     <string>Generar Factura</string>
+   </property>
+  </action>
+  <action name="actionClose">
+   <property name="icon">
+    <iconset resource="recursos.qrc">
+     <normaloff>:/gnome_panel_force_quit.png</normaloff>:/gnome_panel_force_quit.png</iconset>
+   </property>
+   <property name="text">
+    <string>Close</string>
+   </property>
+  </action>
+  <action name="actionDelete_Record">
+   <property name="icon">
+    <iconset resource="recursos.qrc">
+     <normaloff>:/1395377070_DeleteRed.png</normaloff>:/1395377070_DeleteRed.png</iconset>
+   </property>
+   <property name="text">
+    <string>Delete Record</string>
    </property>
   </action>
  </widget>

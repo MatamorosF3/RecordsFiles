@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
     ui->tableWidget_buscarCliente->setFixedHeight(55);
 }
 
@@ -71,6 +72,11 @@ MainWindow::~MainWindow()
         listaPrecio.removeAt(i);
         i = -1;
     }
+
+    cliente.updateAvail(); // actualizamos el availList del cliente
+    producto.updateAvail(); // actualizamos el availList de producto
+    categoria.updateAvailCat();//actualizamos el availList de categoria
+    indice.updaterecord("IndexClientes.txt");
     delete ui;
 }
 
@@ -1421,4 +1427,90 @@ void MainWindow::on_comboBox_metodoDeBusquedad_currentIndexChanged(int index)
             } // fin while de recorrer archivo
         }
     }
+}
+
+void MainWindow::on_actionClose_triggered()
+{
+
+    this->close(); // cerramos el programa
+}
+
+void MainWindow::on_actionDelete_Record_triggered()
+{
+
+    if(ui->tabWidget->currentIndex() == 0){ // if clientes
+        for (int i = 0;i < ui->tableWidget->rowCount(); i++){
+            if(listaEliminar.at(i)->isChecked()){
+                cliente.eraserecord(atoi(((QLineEdit*)listaId.at(i))->text().toStdString().c_str()));
+                indice.eraserecord(atoi(((QLineEdit*)listaId.at(i))->text().toStdString().c_str()));
+
+
+                /*En la linea anterior llamos al metodo de eraseRecord por medio del cual asignamos un
+                 * asterisco al inicio de cada registro para saber que le hemos eliminado a la hora de
+                 * realizar la lectura
+                 */
+
+                ui->tableWidget->removeRow(i); // eliminamos la fila del registro que ha sido seleccionado.
+                indice.indices2.remove(atoi(((QLineEdit*)listaId.at(i))->text().toStdString().c_str()));
+                // eliminamos memoria dinamica
+                delete listaEliminar.at(i);
+                delete listaId.at(i);
+
+                // quitamos el puntero de la lista
+                listaEliminar.removeAt(i);
+                listaId.removeAt(i);
+                i = -1;
+            }
+        }
+        cliente.avail.sort(); // ordenmos el avail list de clientes
+        ((QLineEdit*)listaId.at(listaId.length()-1))->setText(QString::number(cliente.avail.front())); // asignacion del nuevo id a utilizar en el QTableWidget
+    } // fin if clientes
+
+    if(ui->tabWidget->currentIndex() == 1){ // if categorias
+        for (int i = 0;i < ui->tableWidget_categorias->rowCount(); i++){
+            if(listaEliminarCate.at(i)->isChecked()){
+                categoria.eraserecord(atoi(((QLineEdit*)listaIdCate.at(i))->text().toStdString().c_str()));
+                ui->tableWidget_categorias->removeRow(i);
+
+                // eliminamos memoria dinamica
+                delete listaEliminarCate.at(i);
+                delete listaIdCate.at(i);
+                //delete listaNombreCate.at(i);
+
+                // quitamos el puntero de la lista
+                listaEliminarCate.removeAt(i);
+                listaIdCate.removeAt(i);
+                //listaNombreCate.removeAt(i);
+                i = -1;
+            }
+        }
+        categoria.AvailCat.sort();
+        ((QLineEdit*)listaIdCate.at(listaIdCate.length()-1))->setText(QString::number(categoria.AvailCat.front()));
+    } // fin if Categorias
+
+    if(ui->tabWidget->currentIndex() == 2){ // if productos
+        for (int i = 0;i < ui->tableWidget_productos->rowCount(); i++){
+            if(listaEliminarProd.at(i)->isChecked()){
+                producto.eraserecord(atoi(((QLineEdit*)listaIdProd.at(i))->text().toStdString().c_str()));
+                ui->tableWidget_productos->removeRow(i);
+
+                // eliminamos memoria dinamica
+                delete listaEliminarProd.at(i);
+                delete listaIdProd.at(i);
+                delete listaNombreProd.at(i);
+                delete listaIdCategoriaProd.at(i);
+                delete listaPrecio.at(i);
+
+                // quitamos el puntero de la lista
+                listaEliminarProd.removeAt(i);
+                listaIdProd.removeAt(i);
+                listaNombreProd.removeAt(i);
+                listaIdCategoriaProd.removeAt(i);
+                listaPrecio.removeAt(i);
+                i = -1;
+            }
+        }
+        producto.avail.sort();
+        ((QLineEdit*)listaIdProd.at(listaIdProd.length()-1))->setText(QString::number(producto.avail.front()));
+    } // fin if productos
 }
