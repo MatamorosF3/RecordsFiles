@@ -31,8 +31,8 @@ void ArbolB::insertar(int k,int p){
     if (this->raiz=='\0'){
 
         this->raiz=new ArbolBNodo(t,true);
-        this->raiz->llave[0]=k;
-        this->raiz->posicion[0]=p;
+        this->raiz->llaves[0].llave1 = k;
+        this->raiz->llaves[0].pos=p;
         this->raiz->n=1;
     }else{
         if(this->raiz->n == 2*t-1){
@@ -42,7 +42,7 @@ void ArbolB::insertar(int k,int p){
              s->partirHijo(0,this->raiz);
 
              int i=0;
-             if (s->llave[0] < k)
+             if (s->llaves[0].llave1 < k)
                  i++;
              s->c[i]->agregarNoLleno(k,p);
 

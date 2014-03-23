@@ -1196,8 +1196,8 @@ void MainWindow::on_comboBox_IdFactura_currentIndexChanged(int index)
         qDebug() << "Antes de while: " << sIdFactura ;
 
         //Buscar la factura en en arbol B
-        ArbolBNodo* tempNodo=new ArbolBNodo();
-        tempNodo=arbolito->buscar(atoi(ui->comboBox_IdFactura->currentText().toStdString().c_str()));
+        //ArbolBNodo* tempNodo=new ArbolBNodo();
+        //tempNodo=arbolito->buscar(atoi(ui->comboBox_IdFactura->currentText().toStdString().c_str()));
         //c=tempNodo->pos;
 
         //Error en buscar

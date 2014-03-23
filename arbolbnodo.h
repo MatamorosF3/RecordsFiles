@@ -3,22 +3,26 @@
 
 class ArbolBNodo
 {
-    int *llave;
-    int *posicion;
+
+
     int t;//minimo de llaves
     ArbolBNodo **c;
     int n;//llave actual
-    //int pos;//posicion actual
+
     bool hoja;//si es hoja
 public:
-    int pos;//posicion actual
-    ArbolBNodo();
+    struct llave{
+        int llave1;
+        int pos;
+    };
+    llave* llaves;
     ArbolBNodo(int, bool);
     ~ArbolBNodo();
     void agregarNoLleno(int,int);
     void partirHijo(int, ArbolBNodo*);
     void recorrer();
     ArbolBNodo* buscar(int k);
+    int* getPosicion();
     friend class ArbolB;
 };
 

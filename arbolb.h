@@ -14,6 +14,7 @@ public:
     ArbolBNodo* getRaiz();
     int getT();
     void insertar(int,int);
+    int* getPosocion();
 };
 
 #endif // ARBOLB_H
