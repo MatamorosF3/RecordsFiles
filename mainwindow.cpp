@@ -1177,7 +1177,7 @@ void MainWindow::on_comboBox_IdFactura_currentIndexChanged(int index)
         } // fin while de recorrer archivo
     }
     //Inicio IF ARBOL B
-    /*if(ui->comboBox_metodoDeBusquedad->currentIndex()==1){
+    if(ui->comboBox_metodoDeBusquedad->currentIndex()==1){
         ui->label_IdFactura->clear();
         ui->label_IdFactura->setText(head.value(index));
         detail.path = "Detalle.txt";
@@ -1196,7 +1196,12 @@ void MainWindow::on_comboBox_IdFactura_currentIndexChanged(int index)
         qDebug() << "Antes de while: " << sIdFactura ;
 
         //Buscar la factura en en arbol B
-        //c=arbolito.buscar(atoi(ui->comboBox_IdFactura->currentText().toStdString().c_str()));
+        ArbolBNodo* tempNodo=new ArbolBNodo();
+        tempNodo=arbolito->buscar(atoi(ui->comboBox_IdFactura->currentText().toStdString().c_str()));
+        //c=tempNodo->pos;
+
+        //Error en buscar
+        qDebug() << "buscar: " << arbolito->buscar(atoi(ui->comboBox_IdFactura->currentText().toStdString().c_str())) ;
         //c=indicedetalle.value(atoi(ui->comboBox_IdFactura->currentText().toStdString().c_str()));
 
         while(atoi(sIdFactura.toStdString().c_str())==atoi(ui->comboBox_IdFactura->currentText().toStdString().c_str())){
@@ -1267,7 +1272,7 @@ void MainWindow::on_comboBox_IdFactura_currentIndexChanged(int index)
             sCantidad.clear();
 
         } // fin while de recorrer archivo
-    }*/
+    }
     //Inicio IF INDICE de DETALLE
     if(ui->comboBox_metodoDeBusquedad->currentIndex()==2){
         ui->label_IdFactura->clear();
@@ -1365,8 +1370,8 @@ void MainWindow::on_comboBox_IdFactura_currentIndexChanged(int index)
 void MainWindow::on_comboBox_metodoDeBusquedad_currentIndexChanged(int index)
 {
     if(index==1){
-        /*  arbolito(15);
-        if(arbolito.raiz=='\0'){
+        //arbolito =new ArbolB(15);
+        if(arbolito->getRaiz()=='\0'){
             //cargar a arbol factura
             QString sIdFactura,sIdProducto,sCantidad;
             int c=0;
@@ -1383,9 +1388,9 @@ void MainWindow::on_comboBox_metodoDeBusquedad_currentIndexChanged(int index)
 
 
                 }
-                if(arbolito.buscar(atoi(sIdFactura.toStdString().c_str()))=='\0'){
-                    qDebug() << "Entro al if";
-                    arbolito.insertar(atoi(sIdFactura.toStdString().c_str()));
+                if(arbolito->buscar(atoi(sIdFactura.toStdString().c_str()))=='\0'){
+                    //qDebug() << "Entro al if";
+                    arbolito->insertar(atoi(sIdFactura.toStdString().c_str()),c);
                     //indicedetalle.insert(atoi(sIdFactura.toStdString().c_str()),c);
                 }
                 c+=12;
@@ -1394,9 +1399,9 @@ void MainWindow::on_comboBox_metodoDeBusquedad_currentIndexChanged(int index)
                 sCantidad.clear();
 
             } // fin while de recorrer archivo
-            arbolito.recorrer();
+            arbolito->recorrer();
         }
-*/
+
     }else if(index==2){
         if(indicedetalle.size()==0){
             //cargar a indice factura

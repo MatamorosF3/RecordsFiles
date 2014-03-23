@@ -82,7 +82,7 @@ private:
     bool Peliminar;
     LinearIndexFile indice;
     LinearIndexFile indFactura;
-   // ArbolB arbolito;
+    ArbolB* arbolito=new ArbolB(15);
     detailfile detail;
 
 
