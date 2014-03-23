@@ -1021,7 +1021,7 @@ void MainWindow::on_lineEdit_buscarCliente_returnPressed()
 void MainWindow::probarEliminar()
 {
 
-   // delete ((QLineEdit*)ui->tableWidget->cellWidget(0,1)); // obtenemos el email del registro de la fila en que estemos posicionados
+    // delete ((QLineEdit*)ui->tableWidget->cellWidget(0,1)); // obtenemos el email del registro de la fila en que estemos posicionados
 
 
 }
