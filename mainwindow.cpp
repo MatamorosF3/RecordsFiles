@@ -1078,43 +1078,144 @@ void MainWindow::on_comboBox_IdCliente_currentIndexChanged(const QString &arg1)
 
 void MainWindow::on_comboBox_IdFactura_currentIndexChanged(int index)
 {
-    ui->label_IdFactura->clear();
-    ui->label_IdFactura->setText(head.value(index));
-    detail.path = "Detalle.txt";
-    detail.recordsSize();
-    int c = 0;
-    int detailSize = detail.recordsSize();
-    char buffer[13];
-    QString sIdFactura;
-    QString sIdProducto;
-    QString sCantidad;
-    bool f = false;
-    for(int i = 0; i < ui->tableWidget_consulta->rowCount();i++){
-        ui->tableWidget_consulta->removeRow(i);
-        i = -1;
+    double acum=0;//para calcular el total de la factura
+    if(ui->comboBox_metodoDeBusquedad->currentIndex()==0){
+        ui->label_IdFactura->clear();
+        ui->label_IdFactura->setText(head.value(index));
+        detail.path = "Detalle.txt";
+        detail.recordsSize();
+        int c = 0;
+        int detailSize = detail.recordsSize();
+        char buffer[13];
+        QString sIdFactura;
+        QString sIdProducto;
+        QString sCantidad;
+        bool f = false;
+        for(int i = 0; i < ui->tableWidget_consulta->rowCount();i++){
+            ui->tableWidget_consulta->removeRow(i);
+            i = -1;
+        }
+        while(c < detailSize){
+            detail.readrecord(buffer,c);
+            buffer[12] = '\0';
+            c+=12;
+            for(int i = 0; i <13;i++){
+                if(i < 5)
+                    sIdFactura += buffer[i];
+                else{
+                    if(i > 5 && i < 10){
+                        sIdProducto += buffer[i];
+                    }else{
+                        if(i > 10 && i < 12)
+                            sCantidad += buffer[i];
+                    }
+                }
+
+            }
+            if(atoi(sIdFactura.toStdString().c_str()) == atoi(ui->comboBox_IdFactura->currentText().toStdString().c_str())){
+
+                f = true;
+                const int ultima_fila =  ui->tableWidget_consulta->rowCount();
+
+                ui->tableWidget_consulta->insertRow(ultima_fila);
+                char buffer2[37];
+                producto.findrecord(buffer2,atoi(sIdProducto.toStdString().c_str()));
+                buffer2[36] = '\0';
+                QString sNombre;//length de 19
+                QString sPrecio;//length de 9
+                for(int i = 4; i < 23;i++){
+                    if(i != 23){
+                        if(buffer2[i] == ' ' && buffer2[i+1] == ' ')
+                            break;
+                        else{
+                            sNombre += buffer2[i];
+                        }
+                    }
+                }
+
+                for(int i = 27; i < 36; i++){
+                    if(i != 36){
+                        if(buffer2[i] == ' ' && buffer2[i+1] == ' ')
+                            break;
+                        else{
+                            sPrecio += buffer2[i];
+                        }
+                    }
+                }
+                QPointer<QLineEdit>  producto = new QLineEdit(this);
+                QPointer<QLineEdit>  precioUnidad = new QLineEdit(this);
+                QPointer<QLineEdit>  cantidad = new QLineEdit(this);
+                QPointer<QLineEdit>  precioTotal = new QLineEdit(this);
+
+                producto->setText(sNombre);
+                cantidad->setText(sCantidad);
+                precioUnidad->setText(sPrecio);
+                ui->tableWidget_consulta->setCellWidget(ultima_fila,0,producto); // producto
+                ui->tableWidget_consulta->setCellWidget(ultima_fila,1,cantidad); // catidad
+                double precio2 = sPrecio.toDouble();
+                ui->tableWidget_consulta->setCellWidget(ultima_fila,2,precioUnidad); // precio por unidad
+                double total = precio2 * atoi(sCantidad.toStdString().c_str());
+                acum+=total;
+                precioTotal->setText(QString::number(total));
+                ui->tableWidget_consulta->setCellWidget(ultima_fila,3,precioTotal); // precio total
+
+            }
+            if(f && atoi(sIdFactura.toStdString().c_str()) != atoi(ui->comboBox_IdFactura->currentText().toStdString().c_str() )){
+                //qDebug() << "hizo break;";
+                break;
+            }
+            sIdFactura.clear();
+            sIdProducto.clear();
+            sCantidad.clear();
+
+        } // fin while de recorrer archivo
     }
-    while(c < detailSize){
-        detail.readrecord(buffer,c);
-        buffer[12] = '\0';
-        c+=12;
-        for(int i = 0; i <13;i++){
-            if(i < 5)
-                sIdFactura += buffer[i];
-            else{
-                if(i > 5 && i < 10){
-                    sIdProducto += buffer[i];
-                }else{
-                    if(i > 10 && i < 12)
-                        sCantidad += buffer[i];
+    //Inicio IF ARBOL B
+    /*if(ui->comboBox_metodoDeBusquedad->currentIndex()==1){
+        ui->label_IdFactura->clear();
+        ui->label_IdFactura->setText(head.value(index));
+        detail.path = "Detalle.txt";
+        detail.recordsSize();
+        int c = 0;
+        int detailSize = detail.recordsSize();
+        char buffer[13];
+        QString sIdFactura=ui->comboBox_IdFactura->currentText();
+        QString sIdProducto;
+        QString sCantidad;
+        bool f = false;
+        for(int i = 0; i < ui->tableWidget_consulta->rowCount();i++){
+            ui->tableWidget_consulta->removeRow(i);
+            i = -1;
+        }
+        qDebug() << "Antes de while: " << sIdFactura ;
+
+        //Buscar la factura en en arbol B
+        //c=arbolito.buscar(atoi(ui->comboBox_IdFactura->currentText().toStdString().c_str()));
+        //c=indicedetalle.value(atoi(ui->comboBox_IdFactura->currentText().toStdString().c_str()));
+
+        while(atoi(sIdFactura.toStdString().c_str())==atoi(ui->comboBox_IdFactura->currentText().toStdString().c_str())){
+            sIdFactura.clear();
+            detail.readrecord(buffer,c);
+            buffer[12] = '\0';
+            c+=12;
+            for(int i = 0; i <13;i++){
+                if(i < 5)
+                    sIdFactura += buffer[i];
+                else{
+                    if(i > 5 && i < 10){
+                        sIdProducto += buffer[i];
+                    }else{
+                        if(i > 10 && i < 12)
+                            sCantidad += buffer[i];
+                    }
                 }
             }
-
-        }
-        if(atoi(sIdFactura.toStdString().c_str()) == atoi(ui->comboBox_IdFactura->currentText().toStdString().c_str())){
-
+            if(atoi(sIdFactura.toStdString().c_str())!=atoi(ui->comboBox_IdFactura->currentText().toStdString().c_str())){
+                break;
+            }
+            qDebug() << "sIdFactura: " << atoi(sIdFactura.toStdString().c_str());
             f = true;
             const int ultima_fila =  ui->tableWidget_consulta->rowCount();
-
             ui->tableWidget_consulta->insertRow(ultima_fila);
             char buffer2[37];
             producto.findrecord(buffer2,atoi(sIdProducto.toStdString().c_str()));
@@ -1154,28 +1255,170 @@ void MainWindow::on_comboBox_IdFactura_currentIndexChanged(int index)
             ui->tableWidget_consulta->setCellWidget(ultima_fila,2,precioUnidad); // precio por unidad
             double total = precio2 * atoi(sCantidad.toStdString().c_str());
             precioTotal->setText(QString::number(total));
+            acum+=total;
             ui->tableWidget_consulta->setCellWidget(ultima_fila,3,precioTotal); // precio total
+            sIdProducto.clear();
+            sCantidad.clear();
 
-        }
-        if(f && atoi(sIdFactura.toStdString().c_str()) != atoi(ui->comboBox_IdFactura->currentText().toStdString().c_str() )){
-            //qDebug() << "hizo break;";
-            break;
-        }
-        sIdFactura.clear();
-        sIdProducto.clear();
-        sCantidad.clear();
+        } // fin while de recorrer archivo
+    }*/
+    //Inicio IF INDICE de DETALLE
+    if(ui->comboBox_metodoDeBusquedad->currentIndex()==2){
+        ui->label_IdFactura->clear();
+        ui->label_IdFactura->setText(head.value(index));
+        detail.path = "Detalle.txt";
+        detail.recordsSize();
+        int c = 0;
 
-    } // fin while de recorrer archivo
+        char buffer[13];
+        QString sIdFactura=ui->comboBox_IdFactura->currentText();
+        QString sIdProducto;
+        QString sCantidad;
+
+        for(int i = 0; i < ui->tableWidget_consulta->rowCount();i++){
+            ui->tableWidget_consulta->removeRow(i);
+            i = -1;
+        }
+        qDebug() << "Antes de while: " << sIdFactura ;
+        c=indicedetalle.value(atoi(ui->comboBox_IdFactura->currentText().toStdString().c_str()));
+
+        while(atoi(sIdFactura.toStdString().c_str())==atoi(ui->comboBox_IdFactura->currentText().toStdString().c_str())){
+            sIdFactura.clear();
+            detail.readrecord(buffer,c);
+            buffer[12] = '\0';
+            c+=12;
+            for(int i = 0; i <13;i++){
+                if(i < 5)
+                    sIdFactura += buffer[i];
+                else{
+                    if(i > 5 && i < 10){
+                        sIdProducto += buffer[i];
+                    }else{
+                        if(i > 10 && i < 12)
+                            sCantidad += buffer[i];
+                    }
+                }
+            }
+            if(atoi(sIdFactura.toStdString().c_str())!=atoi(ui->comboBox_IdFactura->currentText().toStdString().c_str())){
+                break;
+            }
+            qDebug() << "sIdFactura: " << atoi(sIdFactura.toStdString().c_str());
+
+            const int ultima_fila =  ui->tableWidget_consulta->rowCount();
+            ui->tableWidget_consulta->insertRow(ultima_fila);
+            char buffer2[37];
+            producto.findrecord(buffer2,atoi(sIdProducto.toStdString().c_str()));
+            buffer2[36] = '\0';
+            QString sNombre;//length de 19
+            QString sPrecio;//length de 9
+            for(int i = 4; i < 23;i++){
+                if(i != 23){
+                    if(buffer2[i] == ' ' && buffer2[i+1] == ' ')
+                        break;
+                    else{
+                        sNombre += buffer2[i];
+                    }
+                }
+            }
+
+            for(int i = 27; i < 36; i++){
+                if(i != 36){
+                    if(buffer2[i] == ' ' && buffer2[i+1] == ' ')
+                        break;
+                    else{
+                        sPrecio += buffer2[i];
+                    }
+                }
+            }
+            QPointer<QLineEdit>  producto = new QLineEdit(this);
+            QPointer<QLineEdit>  precioUnidad = new QLineEdit(this);
+            QPointer<QLineEdit>  cantidad = new QLineEdit(this);
+            QPointer<QLineEdit>  precioTotal = new QLineEdit(this);
+
+            producto->setText(sNombre);
+            cantidad->setText(sCantidad);
+            precioUnidad->setText(sPrecio);
+            ui->tableWidget_consulta->setCellWidget(ultima_fila,0,producto); // producto
+            ui->tableWidget_consulta->setCellWidget(ultima_fila,1,cantidad); // catidad
+            double precio2 = sPrecio.toDouble();
+            ui->tableWidget_consulta->setCellWidget(ultima_fila,2,precioUnidad); // precio por unidad
+            double total = precio2 * atoi(sCantidad.toStdString().c_str());
+            precioTotal->setText(QString::number(total));
+            acum+=total;
+            ui->tableWidget_consulta->setCellWidget(ultima_fila,3,precioTotal); // precio total
+            sIdProducto.clear();
+            sCantidad.clear();
+
+        } // fin while de recorrer archivo
+    }
+    ui->lineEdit_totalFactura->setText(QString::number(acum));
+
 }
 
 
 void MainWindow::on_comboBox_metodoDeBusquedad_currentIndexChanged(int index)
 {
     if(index==1){
-        ArbolB arbolito(15);
-        arbolito.insertar(5);
+        /*  arbolito(15);
+        if(arbolito.raiz=='\0'){
+            //cargar a arbol factura
+            QString sIdFactura,sIdProducto,sCantidad;
+            int c=0;
+            int detailSize = detail.recordsSize();
+            char buffer[13];
+            while(c < detailSize){
+                detail.readrecord(buffer,c);
+                buffer[12] = '\0';
+
+                for(int i = 0; i <5;i++){
+
+                    sIdFactura += buffer[i];
+                    //qDebug() << "sIdFactura: " << sIdFactura;
 
 
+                }
+                if(arbolito.buscar(atoi(sIdFactura.toStdString().c_str()))=='\0'){
+                    qDebug() << "Entro al if";
+                    arbolito.insertar(atoi(sIdFactura.toStdString().c_str()));
+                    //indicedetalle.insert(atoi(sIdFactura.toStdString().c_str()),c);
+                }
+                c+=12;
+                sIdFactura.clear();
+                sIdProducto.clear();
+                sCantidad.clear();
 
+            } // fin while de recorrer archivo
+            arbolito.recorrer();
+        }
+*/
+    }else if(index==2){
+        if(indicedetalle.size()==0){
+            //cargar a indice factura
+            QString sIdFactura,sIdProducto,sCantidad;
+            int c=0;
+            int detailSize = detail.recordsSize();
+            char buffer[13];
+            while(c < detailSize){
+                detail.readrecord(buffer,c);
+                buffer[12] = '\0';
+
+                for(int i = 0; i <5;i++){
+
+                    sIdFactura += buffer[i];
+                    //qDebug() << "sIdFactura: " << sIdFactura;
+
+
+                }
+                if(!indicedetalle.contains(atoi(sIdFactura.toStdString().c_str()))){
+                    //qDebug() << "Agregar al mapa";
+                    indicedetalle.insert(atoi(sIdFactura.toStdString().c_str()),c);
+                }
+                c+=12;
+                sIdFactura.clear();
+                sIdProducto.clear();
+                sCantidad.clear();
+
+            } // fin while de recorrer archivo
+        }
     }
 }

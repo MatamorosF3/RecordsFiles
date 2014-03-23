@@ -11,6 +11,7 @@
 #include <QComboBox>
 #include <QCheckBox>
 #include "detailfile.h"
+#include "arbolb.h"
 #include <QMap>
 namespace Ui {
 class MainWindow;
@@ -72,9 +73,12 @@ private:
     headerfile header;
     Catfile availCategoria;
     QMap<int,QString> head;
+    QMap<int,int> indicedetalle;
     bool leer;
     bool Peliminar;
     LinearIndexFile indice;
+    LinearIndexFile indFactura;
+   // ArbolB arbolito;
     detailfile detail;
 
 
