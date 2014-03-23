@@ -28,11 +28,11 @@ void ArbolBNodo::recorrer()
 
         if(!this->hoja)
             this->c[i]->recorrer();
-
-
+        qDebug() << "pasa por: " << this->llaves[i].llave1;
     }
     if(!this->hoja)
-       this->c[i]->recorrer();
+        this->c[i]->recorrer();
+
 }
 
 
