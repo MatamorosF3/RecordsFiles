@@ -96,7 +96,8 @@ int LinearIndexFile::eraserecord(int ind){
 
 int LinearIndexFile::updaterecord(const char* rec, int ind){return 0;}
 int LinearIndexFile::updaterecord(QString filename){
-    if(tamanioInicial!=indices2.size()){
+    this->open(filename.toStdString().c_str(),ios_base::in);
+    if(tamanioInicial!=indices2.size() || this->is_open() == false){
         remove(filename.toStdString().c_str());
         this->open(filename.toStdString().c_str(),ios_base::out);
         qDebug() << "Creo archivo de indice";

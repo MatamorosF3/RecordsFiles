@@ -248,21 +248,7 @@
                </widget>
               </item>
               <item alignment="Qt::AlignHCenter">
-               <widget class="QLabel" name="label_4">
-                <property name="font">
-                 <font>
-                  <pointsize>14</pointsize>
-                  <weight>75</weight>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>12651</string>
-                </property>
-               </widget>
-              </item>
-              <item alignment="Qt::AlignHCenter">
-               <widget class="QLabel" name="label_IdFactura">
+               <widget class="QLabel" name="label_FechaFactura">
                 <property name="font">
                  <font>
                   <pointsize>14</pointsize>
@@ -381,7 +367,7 @@
            <widget class="QComboBox" name="comboBox_metodoDeBusquedad">
             <item>
              <property name="text">
-              <string>Indice Simple</string>
+              <string>Búsqueda Secuencial</string>
              </property>
             </item>
             <item>
@@ -391,7 +377,7 @@
             </item>
             <item>
              <property name="text">
-              <string>Indice loco</string>
+              <string>Indice Simple</string>
              </property>
             </item>
            </widget>
