@@ -7,10 +7,13 @@ class ArbolB
     ArbolBNodo* raiz;
     int t;
 public:
+    ArbolB();
     ArbolB(int);
     void recorrer();
     ArbolBNodo* buscar(int);
-    void insertar(int);
+    ArbolBNodo* getRaiz();
+    int getT();
+    void insertar(int,int);
 };
 
 #endif // ARBOLB_H
