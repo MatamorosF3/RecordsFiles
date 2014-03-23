@@ -63,6 +63,10 @@ private slots:
     void probarEliminar();
     void on_comboBox_metodoDeBusquedad_currentIndexChanged(int index);
 
+    void on_actionClose_triggered();
+
+    void on_actionDelete_Record_triggered();
+
 private:
     Ui::MainWindow *ui;
     ClientFile cliente;
