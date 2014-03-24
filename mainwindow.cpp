@@ -123,7 +123,7 @@ void MainWindow::on_pushButton_leer_clicked()
         indice.tamanioInicial=indice.indices2.size();
     }
 
-    if(ui->tabWidget->currentIndex() == 0 || ui->tabWidget->currentIndex() == 1 || ui->tabWidget->currentIndex() == 2){ // inicio if clientes
+    if(ui->tabWidget->currentIndex() == 0 || ui->tabWidget->currentIndex() == 1 || ui->tabWidget->currentIndex() == 2|| ui->tabWidget->currentIndex() == 3){ // inicio if clientes
 
         cliente.path = "Clientes.txt"; // asignamos el path de clientes para poder manejar el FILE IO de clientes
         const int cantidad_registros  =cliente.recordsSize(); // obtenemos el offset ubicado al final del archivo
@@ -438,7 +438,7 @@ void MainWindow::on_pushButton_leer_clicked()
         crear_nuevaFila_Productos(); // metodo para crear nueva fila en QTableWidget de producto
     } // fin if productos
     leer = true;
-    ui->statusBar->showMessage("Lectra de datos realizada...",2000);
+    ui->statusBar->showMessage("Lectura de datos realizada...",2000);
 
 }
 
@@ -1575,6 +1575,7 @@ void MainWindow::on_comboBox_metodoDeBusquedad_currentIndexChanged(int index)
             } // fin while de recorrer archivo
             arbolito->recorrer();
             ui->statusBar->showMessage("Arbol B creado..",2000);
+
         }
 
     }else if(index==2){ // inicio if si metodo fue seleccionado de forma
