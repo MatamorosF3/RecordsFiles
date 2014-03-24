@@ -1445,7 +1445,7 @@ void MainWindow::on_comboBox_metodoDeBusquedad_currentIndexChanged(int index)
 
 
                 }
-                    arbolito->insertar(atoi(sIdFactura.toStdString().c_str()),c);
+                arbolito->insertar(atoi(sIdFactura.toStdString().c_str()),c);
                 c+=12;
                 sIdFactura.clear();
                 sIdProducto.clear();
@@ -1569,4 +1569,70 @@ void MainWindow::on_actionDelete_Record_triggered()
         producto.avail.sort();
         ((QLineEdit*)listaIdProd.at(listaIdProd.length()-1))->setText(QString::number(producto.avail.front()));
     } // fin if productos
+}
+
+void MainWindow::on_pushButton_prodvendido_clicked()
+{
+    int prods[ui->tableWidget_productos->rowCount()];
+    for(int i=0;i<ui->tableWidget_productos->rowCount();i++){
+        prods[i]=0;
+    }
+    detail.path = "Detalle.txt"; // asignamos el nomnbre del archivo detalle
+    detail.recordsSize();
+    int c = 0; // inicializamos el contador en 0 que a su vez funciona como offset
+    int detailSize = detail.recordsSize(); // obtenemos el tamaño del archivo de detalle para recorrerlo secuencialemnte
+    char buffer[13]; // creacion del buffer de 12 bytes ya que sabemos que cada registro de detalle es de tamaño fijo de 12 bytes
+    QString sIdFactura;
+    QString sIdProducto;
+    QString sCantidad;
+    bool f = false;
+    while(c < detailSize){ // inicio while para poder leer de manera secuencial los registros de detalle
+        detail.readrecord(buffer,c); // metodo para leer los registros
+        buffer[12] = '\0'; // asignacion del caracter null para despues no tener problemas con los caracteres basuras
+        c+=12; // incrementaos contador en 12 para poder leer el siguiente registro
+        for(int i = 0; i <13;i++){ // for para obtener el id factura
+            if(i < 5)
+                sIdFactura += buffer[i];
+            else{
+                if(i > 5 && i < 10){ // obtenemos el id del producto
+                    sIdProducto += buffer[i];
+                }else{
+                    if(i > 10 && i < 12)
+                        sCantidad += buffer[i]; // obtenemos la cantidad comprada
+                }
+            }
+
+        }
+        //Incrementamos en la posicion correspondiente
+        prods[atoi(sIdProducto.toStdString().c_str())]+=atoi(sCantidad.toStdString().c_str());
+        sIdFactura.clear();
+        sIdProducto.clear();
+        sCantidad.clear();
+        /* limpiamos las variables para poder seguir realizando una lectura
+         * secuencial de los registros de detalle factura de una manera correcta
+         */
+    } // fin while de recorrer archivo
+    //Encontrar el mayor
+    int mayor=prods[0];
+    int indiceproducto=0;
+    for(int i=1;i<ui->tableWidget_productos->rowCount();i++){
+        if(prods[i]>mayor){
+            mayor=prods[i];
+            indiceproducto=i;
+        }
+    }
+    char buffer2[37];
+    producto.findrecord(buffer2,indiceproducto);
+    buffer2[36]='\0';
+    QString sNombre;
+    for(int i = 4; i < 23;i++){ // for para obtener nombre del producto
+        if(i != 23){
+            if(buffer2[i] == ' ' && buffer2[i+1] == ' ')
+                break;
+            else{
+                sNombre += buffer2[i]; // obtener nombre del producto
+            }
+        }
+    }
+    QMessageBox::information(this,"El producto más vendido es",sNombre);
 }

@@ -67,6 +67,8 @@ private slots:
 
     void on_actionDelete_Record_triggered();
 
+    void on_pushButton_prodvendido_clicked();
+
 private:
     Ui::MainWindow *ui;
     ClientFile cliente;
