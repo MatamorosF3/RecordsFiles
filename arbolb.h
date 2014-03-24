@@ -4,11 +4,11 @@
 
 class ArbolB
 {
-    ArbolBNodo* raiz;
-    int t;
+    ArbolBNodo* raiz;//el nodo raiz del arbol!
+    int t;//el minimo ramas en un nodo
 public:
     ArbolB();
-    ArbolB(int);
+    ArbolB(int);//inicializa arbol vacio
     void recorrer();
     ArbolBNodo* buscar(int);
     ArbolBNodo* getRaiz();
