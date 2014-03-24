@@ -148,6 +148,7 @@ int Catfile::recordsSize()
 int Catfile::updateAvailCat()
 {
     if(!AvailCat.empty()){
+        remove("AvailCat.txt");
             this->open("AvailCat.txt",ios_base::out);
 
             for (std::list<int>::iterator it=AvailCat.begin() ; it != AvailCat.end(); ++it){

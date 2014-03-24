@@ -4,5 +4,6 @@
         <file>1395376660_-trash.png</file>
         <file>1395377070_DeleteRed.png</file>
         <file>gnome_panel_force_quit.png</file>
+        <file>application_exit.png</file>
     </qresource>
 </RCC>

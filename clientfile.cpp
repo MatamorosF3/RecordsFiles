@@ -29,6 +29,8 @@ int ClientFile::readrecord( char* rec, int offset){
 
     if(offset == 0){
         this->open("Avail.txt",ios_base::in | ios_base::out);
+        if(!this->is_open())
+            return 0;
         char entero[2];
         string numero = "";
         int number;
@@ -167,6 +169,7 @@ int ClientFile::recordsSize()
 int ClientFile::updateAvail()
 {
     if(!avail.empty()){
+        remove("Avail.txt");
         this->open("Avail.txt",ios_base::out);
 
         for (std::list<int>::iterator it=avail.begin() ; it != avail.end(); ++it){

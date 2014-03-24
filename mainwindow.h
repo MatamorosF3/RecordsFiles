@@ -22,16 +22,12 @@ class MainWindow : public QMainWindow
     Q_OBJECT
     QList<QPointer<QCheckBox> > listaEliminar;
     QList<QPointer<QLineEdit> > listaId;
-
-    //QList<QPointer<QLineEdit> > listaNombre;
-    //QList<QPointer<QLineEdit> > listaCorreo;
     QList<QPointer<QCheckBox> > listaEliminarProd;
     QList<QPointer<QLineEdit> > listaIdProd;
     QList<QPointer<QLineEdit> > listaNombreProd;
     QList<QPointer<QLineEdit> > listaIdCategoriaProd;
     QList<QPointer<QLineEdit> > listaPrecio;
     QList<QPointer<QLineEdit> > listaIdCate;
-    //QList<QPointer<QLineEdit> > listaNombreCate;
     QList<QPointer<QCheckBox> > listaEliminarCate;
     QPointer<QComboBox> IdCat2;
 
@@ -42,25 +38,33 @@ public:
 
 private slots:
     void on_pushButton_leer_clicked();
-    void on_pushButton_cerrar_clicked();
-    void on_pushButton_eliminar_clicked();
-    void LineEdit_guardar_enter();
-    void LineEdit_guardar_enter_Categorias();
-    void LineEdit_guardar_enter_Productos();
-    void crear_nuevaFila();
-    void crear_nuevaFila_Productos();
-    void crear_nuevaFila_Categorias();
-    void crear_nuevaFila(QString,QString,QString);
-    void on_actionNew_triggered();
-    void on_actionOpen_triggered();
-    void on_actionGenerar_Factura_triggered();
-    void on_lineEdit_buscarCliente_returnPressed();
 
+    void LineEdit_guardar_enter();
+
+    void LineEdit_guardar_enter_Categorias();
+
+    void LineEdit_guardar_enter_Productos();
+
+    void crear_nuevaFila();
+
+    void crear_nuevaFila_Productos();
+
+    void crear_nuevaFila_Categorias();
+
+    void crear_nuevaFila(QString,QString,QString);
+
+    void on_actionNew_triggered();
+
+    void on_actionOpen_triggered();
+
+    void on_actionGenerar_Factura_triggered();
+
+    void on_lineEdit_buscarCliente_returnPressed();
 
     void on_comboBox_IdCliente_currentIndexChanged(const QString &arg1);
 
     void on_comboBox_IdFactura_currentIndexChanged(int index);
-    void probarEliminar();
+
     void on_comboBox_metodoDeBusquedad_currentIndexChanged(int index);
 
     void on_actionClose_triggered();
@@ -68,6 +72,8 @@ private slots:
     void on_actionDelete_Record_triggered();
 
     void on_pushButton_prodvendido_clicked();
+
+    void on_tabWidget_currentChanged(int index);
 
 private:
     Ui::MainWindow *ui;
@@ -80,10 +86,11 @@ private:
     Catfile availCategoria;
     QMap<int,QString> head;
     QMap<int,int> indicedetalle;
-    bool leer;
+    bool leer = false;
     bool Peliminar;
     LinearIndexFile indice;
-    LinearIndexFile indFactura;
+    LinearIndexFile indiceCat;
+    LinearIndexFile indiceProd;
     ArbolB* arbolito=new ArbolB(8);
     detailfile detail;
 

@@ -11,6 +11,10 @@ int LinearIndexFile::readrecord(QString filename){
 
     int c = recordsSize(filename);
     this->open(filename.toStdString().c_str() ,ios_base::in);
+    if(!this->is_open()){
+        this->close();
+        return 0;
+    }
     char buffer[12];
     int cont=0;
     while(cont < c){
@@ -97,15 +101,14 @@ int LinearIndexFile::eraserecord(int ind){
 int LinearIndexFile::updaterecord(const char* rec, int ind){return 0;}
 int LinearIndexFile::updaterecord(QString filename){
     this->open(filename.toStdString().c_str(),ios_base::in);
-    if(tamanioInicial!=indices2.size() || this->is_open() == false){
+    if(tamanioInicial!=indices2.size() || !this->is_open()){
+        this->close();
         remove(filename.toStdString().c_str());
         this->open(filename.toStdString().c_str(),ios_base::out);
-        qDebug() << "Creo archivo de indice";
         int cont=0;
 
         for (QMap<int,int>::iterator it=indices2.begin(); it!=indices2.end(); ++it){
-
-            QString sLlave;
+             QString sLlave;
             QString sOffset;
             //inicio llave
             if(it.key()<10){

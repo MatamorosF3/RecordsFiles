@@ -157,7 +157,7 @@ int ProductFile::recordsSize()
 int ProductFile::updateAvail()
 {    
     if(!avail.empty()){
-
+        remove("AvailProductos.txt");
         this->open("AvailProductos.txt",ios_base::out);
 
         for (std::list<int>::iterator it=avail.begin() ; it != avail.end(); ++it){
