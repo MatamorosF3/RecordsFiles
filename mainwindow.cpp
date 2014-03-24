@@ -562,6 +562,7 @@ void MainWindow::LineEdit_guardar_enter_Categorias()
             registro.replace(4,strlen(name.toStdString().c_str()),name); // ingresamos el nombre el parte correspondiente del registro en blanco
             categoria.writerecord(registro.toStdString().c_str(),id.toInt()); // mandamos a escribir el nuevo registro al archivo junto con su id el cual nos falicita a la hora de econtrar el offset
             ui->statusBar->showMessage("Registro Guardado",2000); // muestra en la parte inferior de la ventana que el registro ha sido guardado
+            indiceCat.indices2.insert(atoi(id.toStdString().c_str()),(atoi(id.toStdString().c_str())-1)*24); // se ingresa id con su offset
             crear_nuevaFila_Categorias(); // metodo para crear nueva fila de categorias
         }
     }else{//SI ESTA MODIFICANDO
@@ -609,6 +610,8 @@ void MainWindow::LineEdit_guardar_enter_Productos()
             registro.replace(23,strlen(((QComboBox*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-1))->currentText().toStdString().c_str()),((QComboBox*)ui->tableWidget_productos->cellWidget(index.row(),index.column()-1))->currentText());
             registro.replace(27,strlen(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()))->text().toStdString().c_str()),((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),index.column()))->text());
             producto.writerecord(registro.toStdString().c_str(),(((QLineEdit*)ui->tableWidget_productos->cellWidget(index.row(),1))->text().toInt()));
+            indiceProd.indices2.insert(atoi(s.toStdString().c_str()),(atoi(s.toStdString().c_str())-1)*36); // se ingresa id con su offset
+
             crear_nuevaFila_Productos();
         }
     }else{//SI ESTA MODIFICANDO
@@ -1634,7 +1637,7 @@ void MainWindow::on_actionDelete_Record_triggered()
                  */
 
                 ui->tableWidget->removeRow(i); // eliminamos la fila del registro que ha sido seleccionado.
-               // indice.indices2.remove(atoi(((QLineEdit*)listaId.at(i))->text().toStdString().c_str()));
+                // indice.indices2.remove(atoi(((QLineEdit*)listaId.at(i))->text().toStdString().c_str()));
                 // eliminamos memoria dinamica
                 delete listaEliminar.at(i);
                 delete listaId.at(i);
