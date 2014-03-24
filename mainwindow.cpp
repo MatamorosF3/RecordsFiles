@@ -564,55 +564,58 @@ void MainWindow::LineEdit_guardar_enter()
 
 void MainWindow::LineEdit_guardar_enter_Categorias()
 {
-    int rows = ui->tableWidget_categorias->rowCount();
-    QWidget *widget = QApplication::focusWidget();
-    QModelIndex index = ui->tableWidget_categorias->indexAt(widget->pos());
+    int rows = ui->tableWidget_categorias->rowCount(); // se obtiene la ultima fila de la tabla de categorias
+    QWidget *widget = QApplication::focusWidget(); // obtenemos en que parte de la tabla esta enfocado el usuario
+    QModelIndex index = ui->tableWidget_categorias->indexAt(widget->pos()); // luego se obtiene la inforamcion en que
     QString name = ((QLineEdit*)ui->tableWidget_categorias->cellWidget(index.row(),index.column()))->text(); // obtenemos el nombre del registro de la fila que estemos posicionados
-    //((QLineEdit*)ui->tableWidget_categorias->cellWidget(index.row(),index.column()))
-    QString id = ((QLineEdit*)ui->tableWidget_categorias->cellWidget(index.row(),index.column()-1))->text();
-    //  ((QLineEdit*)ui->tableWidget_categorias->cellWidget(index.row(),index.column()-1))->text();
+    QString id = ((QLineEdit*)ui->tableWidget_categorias->cellWidget(index.row(),index.column()-1))->text(); // obtenemos el id de la fila en que el usuario se encuentre posicionado
 
 
-    if(index.row() == rows-1){
 
-        if(name.isEmpty()){
-
+    if(index.row() == rows-1){ // verificamos si esta en la ultima fila y asi poder crear una nueva ya que siempre se creara una fila nueva al final
+        if(name.isEmpty()){ // si nombre esta vacio se lanza msj de error
             QMessageBox::critical(this,"Error","Campos Vacios");
-
         }else{
-            QString registro="                        ";
+            QString registro="                        "; // creacion de la variable registro para almacenar el nuevo registro a guardar
 
             if(id.length()==1){
                 registro = "000                     "; // fin
                 registro.replace (3,strlen(id.toStdString().c_str()),id);
             }
+
             if(id.length()==2){
                 registro = "00                      "; // fin
                 registro.replace (2,strlen(id.toStdString().c_str()),id);
             }
+
             if(id.length()==3){
                 registro = "0                       "; // fin
                 registro.replace (1,strlen(id.toStdString().c_str()),id);
             }
+
             if(id.length()==4){
                 registro = "                        "; // fin
                 registro.replace (0,strlen(id.toStdString().c_str()),id);
             }
-            registro.replace(4,strlen(name.toStdString().c_str()),name);
-            categoria.writerecord(registro.toStdString().c_str(),id.toInt());
-            ui->statusBar->showMessage("Registro Guardado",2000);
-            crear_nuevaFila_Categorias();
+
+            /* en las lineas anteriores se verifica que el id del registro de categorias se vaya a guardar de forma canonica
+             * si el registro solo tiene dos digitos se le debera de agregar 0023 y asi sucesivamente de manera de hacer fijo
+             * el tamaño de id de categoria
+             */
+            registro.replace(4,strlen(name.toStdString().c_str()),name); // ingresamos el nombre el parte correspondiente del registro en blanco
+            categoria.writerecord(registro.toStdString().c_str(),id.toInt()); // mandamos a escribir el nuevo registro al archivo junto con su id el cual nos falicita a la hora de econtrar el offset
+            ui->statusBar->showMessage("Registro Guardado",2000); // muestra en la parte inferior de la ventana que el registro ha sido guardado
+            crear_nuevaFila_Categorias(); // metodo para crear nueva fila de categorias
         }
     }else{//SI ESTA MODIFICANDO
         if(name.isEmpty()){ // if para verificar que no existan campos vacios
             QMessageBox::critical(this,"Error","Campos Vacios");
         }else{
             QString registro="                        ";
-            // QString id=((QLineEdit*)ui->tableWidget_categorias->cellWidget(index.row(),index.column()-1))->text();
             registro.replace(0, strlen(id.toStdString().c_str()),id);
             registro.replace(4,strlen(name.toStdString().c_str()),name);
             categoria.updaterecord(registro.toStdString().c_str(),id.toInt());
-            ui->statusBar->showMessage("Registro Modificado",2000);
+            ui->statusBar->showMessage("Registro Modificado",2000); // muestra en la parte inferior de la ventana
         }
     }
 }
