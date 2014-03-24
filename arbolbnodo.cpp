@@ -1,5 +1,4 @@
 #include "arbolbnodo.h"
-#include <QDebug>
 //ArbolBNodo::ArbolBNodo(){}
 ArbolBNodo::~ArbolBNodo(){
     //delete [] llave;
@@ -22,17 +21,13 @@ ArbolBNodo::ArbolBNodo(int t1, bool hoja)
 
 void ArbolBNodo::recorrer()
 {
-
     int i;
     for(i=0;i<this->n;i++){
-
         if(!this->hoja)
-            this->c[i]->recorrer();
-        qDebug() << "pasa por: " << this->llaves[i].llave1;
+             this->c[i]->recorrer();
     }
     if(!this->hoja)
         this->c[i]->recorrer();
-
 }
 
 
@@ -47,7 +42,7 @@ ArbolBNodo* ArbolBNodo::buscar(int k){
         return this;
     }
 
-    if(hoja){
+    if(this->hoja==true){
        return '\0';
     }
     //ir al hijo apropiado

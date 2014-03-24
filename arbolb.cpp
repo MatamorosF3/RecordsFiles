@@ -21,10 +21,11 @@ int ArbolB::getT(){
 }
 
 ArbolBNodo* ArbolB::buscar(int k){
-    if(this->raiz=='\0')
+    /*if(this->raiz=='\0')
         return '\0';
     else
-        return this->raiz->buscar(k);
+        return this->raiz->buscar(k);*/
+    return (this->raiz == '\0')? '\0' : this->raiz->buscar(k);
 }
 
 void ArbolB::insertar(int k,int p){

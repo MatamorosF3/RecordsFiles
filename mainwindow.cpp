@@ -142,7 +142,6 @@ void MainWindow::on_pushButton_leer_clicked()
                 continue;
             //manejo de indice
             if(!existeindice){
-                qDebug() << "No existe:";
                 int llave=atoi(sId.toStdString().c_str());
                 if(llave<1){
                     indice.indices2.insert(atoi(sId.toStdString().c_str()),0);
@@ -744,7 +743,6 @@ void MainWindow::crear_nuevaFila_Categorias()
     id->setMaxLength(4);
     id->setValidator(new QRegExpValidator(validarNumeros, this));
     id->setEnabled(false);
-    qDebug() << "fila categoria: " << ui->tableWidget_categorias->rowCount();
     if(!categoria.AvailCat.empty()){ // verificamos si hay espacio disponible en el avial list
         if(leer){
             leer = false;
@@ -1259,15 +1257,12 @@ void MainWindow::on_comboBox_IdFactura_currentIndexChanged(int index)
             ui->tableWidget_consulta->removeRow(i);
             i = -1;
         }
-        qDebug() << "Antes de while: " << sIdFactura ;
 
         //Buscar la factura en en arbol B
         ArbolBNodo* tempNodo=arbolito->buscar(atoi(ui->comboBox_IdFactura->currentText().toStdString().c_str()));
         if(tempNodo!='\0'){
             c=((ArbolBNodo::llave*)((tempNodo)->llaves))->pos;
         }
-
-        qDebug() << "c: " << c;
         //c=indicedetalle.value(atoi(ui->comboBox_IdFactura->currentText().toStdString().c_str()));
 
         while(atoi(sIdFactura.toStdString().c_str())==atoi(ui->comboBox_IdFactura->currentText().toStdString().c_str())){
@@ -1290,7 +1285,6 @@ void MainWindow::on_comboBox_IdFactura_currentIndexChanged(int index)
             if(atoi(sIdFactura.toStdString().c_str())!=atoi(ui->comboBox_IdFactura->currentText().toStdString().c_str())){
                 break;
             }
-            qDebug() << "sIdFactura: " << atoi(sIdFactura.toStdString().c_str());
             f = true;
             const int ultima_fila =  ui->tableWidget_consulta->rowCount();
             ui->tableWidget_consulta->insertRow(ultima_fila);
@@ -1356,7 +1350,6 @@ void MainWindow::on_comboBox_IdFactura_currentIndexChanged(int index)
             ui->tableWidget_consulta->removeRow(i);
             i = -1;
         }
-        qDebug() << "Antes de while: " << sIdFactura ;
         c=indicedetalle.value(atoi(ui->comboBox_IdFactura->currentText().toStdString().c_str()));
 
         while(atoi(sIdFactura.toStdString().c_str())==atoi(ui->comboBox_IdFactura->currentText().toStdString().c_str())){
@@ -1379,7 +1372,6 @@ void MainWindow::on_comboBox_IdFactura_currentIndexChanged(int index)
             if(atoi(sIdFactura.toStdString().c_str())!=atoi(ui->comboBox_IdFactura->currentText().toStdString().c_str())){
                 break;
             }
-            qDebug() << "sIdFactura: " << atoi(sIdFactura.toStdString().c_str());
 
             const int ultima_fila =  ui->tableWidget_consulta->rowCount();
             ui->tableWidget_consulta->insertRow(ultima_fila);
@@ -1450,15 +1442,10 @@ void MainWindow::on_comboBox_metodoDeBusquedad_currentIndexChanged(int index)
                 for(int i = 0; i <5;i++){
 
                     sIdFactura += buffer[i];
-                    //qDebug() << "sIdFactura: " << sIdFactura;
 
 
                 }
-                if(arbolito->buscar(atoi(sIdFactura.toStdString().c_str()))=='\0'){
-                    //qDebug() << "Entro al if";
                     arbolito->insertar(atoi(sIdFactura.toStdString().c_str()),c);
-                    //indicedetalle.insert(atoi(sIdFactura.toStdString().c_str()),c);
-                }
                 c+=12;
                 sIdFactura.clear();
                 sIdProducto.clear();
